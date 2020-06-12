@@ -1,0 +1,19 @@
+﻿body {
+    padding-top: 10px;
+    padding-bottom: 20px;
+    /* 背景をグラデーションにする */
+    background: linear-gradient(45deg, #66cdaa, #e0ffff);
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
