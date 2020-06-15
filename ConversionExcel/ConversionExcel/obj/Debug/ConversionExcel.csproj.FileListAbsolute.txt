@@ -79,8 +79,8 @@ C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExc
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\bin\ja\System.Web.WebPages.resources.dll
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\bin\ja\System.Web.WebPages.Deployment.resources.dll
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\bin\ja\System.Web.WebPages.Razor.resources.dll
-C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.csprojAssemblyReference.cache
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.csproj.CoreCompileInputs.cache
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.csproj.CopyComplete
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.dll
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.pdb
+C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.csprojAssemblyReference.cache
