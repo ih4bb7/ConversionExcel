@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConversionExcel.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,18 +10,24 @@ namespace ConversionExcel.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(string data)
+        public ActionResult Index()
         {
-            return View();
+            var parent = new Parent()
+            {
+                ReadPath = "aaa",
+                Processes = new List<Process>
+                {
+                    new Process() {Content = "2月", Arg1 = "arg1", Arg2 = "arg2", Arg3 = "arg3", Arg4 = "arg4", Arg5 = "arg5"},
+                    new Process() {Content = "3月", Arg1 = "arg6", Arg2 = "arg7", Arg3 = "arg8", Arg4 = "arg9", Arg5 = "arg10"},
+                },
+                OutputPath = "bb",
+            };
+            return View(parent);
         }
 
         public ActionResult btnAdd_Click()
         {
-            var newdivs = new HtmlGenericControl("DIV");
-            newdivs.Attributes.Add("class", "maindivs");
-
-            //maindivs.Controls.Add(newdivs);
-            return View("Index");
+            return PartialView("Processes", new Process());
         }
 
         public ActionResult About()
