@@ -13,17 +13,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    @*<script src="~/Scripts/modernizr-2.6.2.js"></script>*@
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {
+                var count = (document.getElementById('contents').innerHTML.match(/処理内容/g) || []).length;
                 // Ajax通信を開始する
                 $.ajax({
-                    data: { data: "add" },
+                    data: { count: count },
                     type: "POST",
                     url: "/Home/btnAdd_Click",
                     success: function (partialView) {
-                        $('#children> tbody:last-child').append(partialView);
+                        $('#contents').append(partialView);
                         console.log('成功');
                     },
                     error: function () {
@@ -32,6 +32,9 @@
                 })
             });
         });
+        //$(window).on('beforeunload', function (e) {
+        //    return '';
+        //});
     </script>
 </head>
 <body>
@@ -50,7 +53,7 @@
             </div>
         </div>
     </form>
-    <form>
+    <form id="contents">
         @foreach (var process in Model.Processes)
         {
             @Html.Partial("_Processes", process)
@@ -65,11 +68,11 @@
                 </div>
             </div>
             <div align="right">
-                <button id="add" name="contents" class="btn btn-success">追加</button>
-                <button id="readConfiguration" class="btn btn-success">設定読込</button>
-                <button id="save" class="btn btn-success">保存</button>
-                <button id="execute" class="btn btn-success">実行</button>
-                <button id="exeOutPut" class="btn btn-success">exe出力</button>
+                <button id="add" name="contents" class="btn-square-shadow">追加</button>
+                <button id="readConfiguration" class="btn-square-shadow">設定読込</button>
+                <button id="save" class="btn-square-shadow">保存</button>
+                <button id="execute" class="btn-square-shadow">実行</button>
+                <button id="exeOutPut" class="btn-square-shadow">exe出力</button>
             </div>
         </div>
 

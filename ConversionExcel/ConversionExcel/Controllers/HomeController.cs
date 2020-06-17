@@ -12,22 +12,23 @@ namespace ConversionExcel.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Count = 1;
             var parent = new Parent()
             {
-                ReadPath = "aaa",
+                ReadPath = "",
                 Processes = new List<Process>
                 {
-                    new Process() {Content = "2月", Arg1 = "arg1", Arg2 = "arg2", Arg3 = "arg3", Arg4 = "arg4", Arg5 = "arg5"},
-                    new Process() {Content = "3月", Arg1 = "arg6", Arg2 = "arg7", Arg3 = "arg8", Arg4 = "arg9", Arg5 = "arg10"},
+                    new Process(),
                 },
-                OutputPath = "bb",
+                OutputPath = "",
             };
             return View(parent);
         }
 
-        public ActionResult btnAdd_Click()
+        public ActionResult btnAdd_Click(int count)
         {
-            return PartialView("Processes", new Process());
+            ViewBag.Count = count + 1;
+            return PartialView("_Processes", new Process());
         }
 
         public ActionResult About()

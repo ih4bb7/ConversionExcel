@@ -5,7 +5,7 @@
 {
     <div id="ProcessingList" class="container">
         <div class="form-group row">
-            <label for="" class="col-sm-2 col-form-label">処理内容1：</label>
+            <label for="" class="col-sm-2 col-form-label">処理内容 @ViewBag.Count：</label>
             <div class="col-sm-10">
                 <select id="shori1" class="form-control">
                     <option>1月</option>
@@ -22,11 +22,11 @@
                     <option>12月</option>
                 </select>
                 <p class="form-inline">
-                    <input type="text" class="form-control" id="argument1-1" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument1-2" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument1-3" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument1-4" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument1-5" style="width:19.6%">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-1" style="width:19.6%">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-2" style="width:19.6%">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-3" style="width:19.6%">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-4" style="width:19.6%">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-5" style="width:19.6%">
                 </p>
             </div>
         </div>

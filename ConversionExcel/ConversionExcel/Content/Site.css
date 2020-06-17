@@ -2,7 +2,8 @@
     padding-top: 10px;
     padding-bottom: 20px;
     /* 背景をグラデーションにする */
-    background: linear-gradient(45deg, #66cdaa, #e0ffff);
+    /*background: linear-gradient(45deg, #66cdaa, #e0ffff);*/
+    background: radial-gradient(#7fffd4, #66cdaa);
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -17,3 +18,21 @@
 .dl-horizontal dt {
     white-space: normal;
 }
+
+.btn-square-shadow {
+    display: inline-block;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    background: #668ad8; /*ボタン色*/
+    color: #FFF;
+    border-bottom: solid 4px #627295;
+    border-radius: 3px;
+}
+
+    .btn-square-shadow:active {
+        /*ボタンを押したとき*/
+        -webkit-transform: translateY(4px);
+        transform: translateY(4px); /*下に動く*/
+        box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2); /*影を小さく*/
+        border-bottom: none;
+    }
