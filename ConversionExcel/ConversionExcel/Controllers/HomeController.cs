@@ -31,18 +31,11 @@ namespace ConversionExcel.Controllers
             return PartialView("_Processes", new Process());
         }
 
-        public ActionResult About()
+        public void btnExecute_Click()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            var excelDriver = new ExcelDriver();
+            excelDriver.Execute();
+            return;
         }
     }
 }

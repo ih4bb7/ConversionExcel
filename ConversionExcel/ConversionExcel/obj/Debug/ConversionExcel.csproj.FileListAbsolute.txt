@@ -85,3 +85,5 @@ C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExc
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.pdb
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\obj\Debug\ConversionExcel.csprojAssemblyReference.cache
 C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\bin\BeginCollectionItem.dll
+C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\bin\EPPlus.dll
+C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\bin\EPPlus.xml

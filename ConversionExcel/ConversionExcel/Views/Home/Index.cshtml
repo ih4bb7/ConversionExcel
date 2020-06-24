@@ -31,6 +31,18 @@
                     }
                 })
             });
+            $('#execute').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/btnExecute_Click",
+                    success: function () {
+                        console.log('成功');
+                    },
+                    error: function () {
+                        console.log('失敗');
+                    }
+                })
+            });
         });
         //$(window).on('beforeunload', function (e) {
         //    return '';
@@ -53,6 +65,16 @@
             </div>
         </div>
     </form>
+    <form>
+        <div class="container">
+            <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">出力Excel：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="outputPath">
+                </div>
+            </div>
+        </div>
+    </form>
     <form id="contents">
         @foreach (var process in Model.Processes)
         {
@@ -61,12 +83,6 @@
     </form>
     <footer>
         <div class="container">
-            <div class="form-group row">
-                <label for="" class="col-sm-2 col-form-label">出力パス：</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="outputPath">
-                </div>
-            </div>
             <div align="right">
                 <button id="add" name="contents" class="btn-square-shadow">追加</button>
                 <button id="readConfiguration" class="btn-square-shadow">設定読込</button>
