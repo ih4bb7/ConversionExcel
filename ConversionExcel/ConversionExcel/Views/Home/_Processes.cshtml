@@ -7,19 +7,8 @@
         <div class="form-group row">
             <label for="" class="col-sm-2 col-form-label">処理内容 @ViewBag.Count：</label>
             <div class="col-sm-10">
-                <select id="shori1" class="form-control">
-                    <option>1月</option>
-                    <option>2月</option>
-                    <option>3月</option>
-                    <option>4月</option>
-                    <option>5月</option>
-                    <option>6月</option>
-                    <option>7月</option>
-                    <option>8月</option>
-                    <option>9月</option>
-                    <option>10月</option>
-                    <option>11月</option>
-                    <option>12月</option>
+                <select id="shori-@ViewBag.Count" class="form-control" onchange="selectChange()">
+                    <option>書き込み</option>
                 </select>
                 <p class="form-inline">
                     <input type="text" class="form-control" id="argument-@ViewBag.Count-1" style="width:19.6%">

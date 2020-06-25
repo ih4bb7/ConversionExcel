@@ -18,7 +18,57 @@ namespace ConversionExcel.Models
         {
             FileInfo = new FileInfo(path);
         }
+        /// <summary>
+        /// 新規作成
+        /// </summary>
+        public void NewCreate(string path, ExcelPackage package)
+        {
+            if (File.Exists(path)) return;
 
+            var sheet = package.Workbook.Worksheets.Add("Sheet1");
+            package.Save();
+        }
+        /// <summary>
+        /// 書き込み
+        /// </summary>
+        public void Writing(ExcelPackage package, string cell, string value)
+        {
+            var sheetName = "Sheet1";
+            Writing(package, sheetName, cell, value);
+        }
+        /// <summary>
+        /// 書き込み
+        /// </summary>
+        public void Writing(ExcelPackage package, string sheetName, string cell, string value)
+        {
+            var sheet = package.Workbook.Worksheets[sheetName];
+            sheet.Cells[cell].Value = value;
+            package.Save();
+        }
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
         public static void BackUpExcel(string fileFullPath)
         {
             if (File.Exists(fileFullPath))
@@ -27,43 +77,43 @@ namespace ConversionExcel.Models
             }
         }
 
-        public static void CreateNewExcel(ExcelPackage package, string sheetName, DataTable dataTable)
-        {
-            CreateNewExcel(package, sheetName, dataTable, null);
-        }
+        //public static void CreateNewExcel(ExcelPackage package, string sheetName, DataTable dataTable)
+        //{
+        //    CreateNewExcel(package, sheetName, dataTable, null);
+        //}
 
-        public static void CreateNewExcel(ExcelPackage package, string sheetName, DataTable dataTable, List<string> headerList)
-        {
-            var sheet = package.Workbook.Worksheets.Add(sheetName);
-            var tableList = dataTable.AsEnumerable().ToList();
-            var rowIndex = 1;
+        //public static void CreateNewExcel(ExcelPackage package, string sheetName, DataTable dataTable, List<string> headerList)
+        //{
+        //    var sheet = package.Workbook.Worksheets.Add(sheetName);
+        //    var tableList = dataTable.AsEnumerable().ToList();
+        //    var rowIndex = 1;
 
-            if (headerList != null)
-            {
-                SetRowValueString(sheet, rowIndex, headerList);
-                rowIndex++;
+        //    if (headerList != null)
+        //    {
+        //        SetRowValueString(sheet, rowIndex, headerList);
+        //        rowIndex++;
 
-                package.Save();
-            }
+        //        package.Save();
+        //    }
 
-            var dataCount = 0;
+        //    var dataCount = 0;
 
-            foreach (var item in tableList)
-            {
-                dataCount++;
-                SetRowValueString(sheet, rowIndex, item.ItemArray.ToList().ConvertAll(x => x.ToString()));
-                rowIndex++;
+        //    foreach (var item in tableList)
+        //    {
+        //        dataCount++;
+        //        SetRowValueString(sheet, rowIndex, item.ItemArray.ToList().ConvertAll(x => x.ToString()));
+        //        rowIndex++;
 
-                if (dataCount == 100)
-                {
-                    package.Save();
-                    //break;
-                    dataCount = 0;
-                }
-            }
+        //        if (dataCount == 100)
+        //        {
+        //            package.Save();
+        //            //break;
+        //            dataCount = 0;
+        //        }
+        //    }
 
-            package.Save();
-        }
+        //    package.Save();
+        //}
 
         public static void RowCopyAndPaste(ExcelPackage sourcePackage, string sourceSheetName, ExcelPackage destPackage, string destSheetName, int sourceRowNum, int destRowNum)
         {
@@ -186,12 +236,12 @@ namespace ConversionExcel.Models
 
         public static void SetFontStyleAndSize(ExcelWorksheet worksheet, int fromRow, int fromCol, int toRow, int toCol, string fontStyle, int fontSize)
         {
-            worksheet.Cells[fromRow, fromCol, toRow, toCol].Style.Font.SetFromFont(new Font(fontStyle, fontSize));
+            worksheet.Cells[fromRow, fromCol, toRow, toCol].Style.Font.SetFromFont(new System.Drawing.Font(fontStyle, fontSize));
         }
 
         public static void SetFontStyleAndSize(ExcelWorksheet worksheet, string address, string fontStyle, int fontSize)
         {
-            worksheet.Cells[address].Style.Font.SetFromFont(new Font(fontStyle, fontSize));
+            worksheet.Cells[address].Style.Font.SetFromFont(new System.Drawing.Font(fontStyle, fontSize));
         }
 
         public static void FontBold(ExcelWorksheet worksheet, string address)

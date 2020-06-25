@@ -44,9 +44,21 @@
                 })
             });
         });
-        //$(window).on('beforeunload', function (e) {
-        //    return '';
-        //});
+        function selectChange() {
+            $.ajax({
+                type: "POST",
+                url: "/Home/select_Change",
+                success: function () {
+                    console.log('成功');
+                },
+                error: function () {
+                    console.log('失敗');
+                }
+            })
+        };
+            //$(window).on('beforeunload', function (e) {
+            //    return '';
+            //});
     </script>
 </head>
 <body>
