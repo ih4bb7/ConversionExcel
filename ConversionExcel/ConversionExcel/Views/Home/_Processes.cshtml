@@ -8,14 +8,15 @@
             <label for="" class="col-sm-2 col-form-label">処理内容 @ViewBag.Count：</label>
             <div class="col-sm-10">
                 <select id="shori-@ViewBag.Count" class="form-control" onchange="selectChange()">
+                    <option></option>
                     <option>書き込み</option>
                 </select>
                 <p class="form-inline">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-1" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-2" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-3" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-4" style="width:19.6%">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-5" style="width:19.6%">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-1" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-2" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-3" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-4" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument-@ViewBag.Count-5" style="width:19.6%" readonly="readonly">
                 </p>
             </div>
         </div>

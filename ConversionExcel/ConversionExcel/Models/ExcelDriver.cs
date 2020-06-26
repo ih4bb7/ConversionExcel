@@ -27,7 +27,7 @@ namespace ConversionExcel.Models
                 outputExcel.NewCreate(outputPath, outputpackage);
 
                 // これ以下を生成していく
-                outputExcel.Writing(outputpackage, "A1", "hello");
+                outputExcel.Writing(outputpackage, "Sheet1", "A1", "hello");
             }
         }
     }

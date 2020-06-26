@@ -1,6 +1,7 @@
 ﻿using ConversionExcel.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,11 +17,11 @@ namespace ConversionExcel.Controllers
             var parent = new Parent()
             {
                 ReadPath = "",
+                OutputPath = "",
                 Processes = new List<Process>
                 {
                     new Process(),
                 },
-                OutputPath = "",
             };
             return View(parent);
         }
@@ -29,15 +30,11 @@ namespace ConversionExcel.Controllers
             ViewBag.Count = count + 1;
             return PartialView("_Processes", new Process());
         }
-        public void btnExecute_Click()
+        public void btnExecute_Click(Parent parent)
         {
-            var excelDriver = new ExcelDriver();
-            excelDriver.Execute();
+            //var excelDriver = new ExcelDriver();
+            //excelDriver.Execute();
             return;
-        }
-        public void select_Change()
-        {
-            
         }
     }
 }

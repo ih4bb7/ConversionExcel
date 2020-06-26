@@ -31,14 +31,6 @@ namespace ConversionExcel.Models
         /// <summary>
         /// 書き込み
         /// </summary>
-        public void Writing(ExcelPackage package, string cell, string value)
-        {
-            var sheetName = "Sheet1";
-            Writing(package, sheetName, cell, value);
-        }
-        /// <summary>
-        /// 書き込み
-        /// </summary>
         public void Writing(ExcelPackage package, string sheetName, string cell, string value)
         {
             var sheet = package.Workbook.Worksheets[sheetName];
