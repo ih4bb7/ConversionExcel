@@ -2,11 +2,11 @@
     var activeElement = document.activeElement;
     var value = activeElement.value;
     var processCount = activeElement.id.substring(6);
-    var id1 = "argument-" + processCount + "-1";
-    var id2 = "argument-" + processCount + "-2";
-    var id3 = "argument-" + processCount + "-3";
-    var id4 = "argument-" + processCount + "-4";
-    var id5 = "argument-" + processCount + "-5";
+    var id1 = "argument1_" + processCount;
+    var id2 = "argument2_" + processCount;
+    var id3 = "argument3_" + processCount;
+    var id4 = "argument4_" + processCount;
+    var id5 = "argument5_" + processCount;
     if (value == "") {
         readOnly5(id1, id2, id3, id4, id5);
     }

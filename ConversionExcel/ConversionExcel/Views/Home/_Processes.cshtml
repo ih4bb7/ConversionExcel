@@ -3,20 +3,20 @@
 
 @using (Html.BeginCollectionItem("Processes"))
 {
-    <div id="ProcessingList" class="container">
+    <div class="container">
         <div class="form-group row">
             <label for="" class="col-sm-2 col-form-label">処理内容 @ViewBag.Count：</label>
             <div class="col-sm-10">
-                <select id="shori-@ViewBag.Count" class="form-control" onchange="selectChange()">
+                <select id="shori_@ViewBag.Count" class="form-control" onchange="selectChange()">
                     <option></option>
                     <option>書き込み</option>
                 </select>
                 <p class="form-inline">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-1" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-2" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-3" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-4" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument-@ViewBag.Count-5" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument1_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument2_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument3_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument4_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                    <input type="text" class="form-control" id="argument5_@ViewBag.Count" style="width:19.6%" readonly="readonly">
                 </p>
             </div>
         </div>
