@@ -25,19 +25,26 @@ namespace ConversionExcel.Models
         {
             if (File.Exists(path)) return;
 
-            var sheet = package.Workbook.Worksheets.Add("Sheet1");
+            package.Workbook.Worksheets.Add("Sheet1");
             package.Save();
         }
         /// <summary>
         /// 書き込み
         /// </summary>
-        public void Writing(ExcelPackage package, string sheetName, string cell, string value)
+        public Results Writing(ExcelPackage package, string sheetName, string cell, string value)
         {
-            var sheet = package.Workbook.Worksheets[sheetName];
-            sheet.Cells[cell].Value = value;
-            package.Save();
+            try
+            {
+                var sheet = package.Workbook.Worksheets[sheetName];
+                sheet.Cells[cell].Value = value;
+                package.Save();
+                return new Results() { Message = ConstValue.SUCCESS, HasError = false };
+            }
+            catch (Exception e)
+            {
+                return new Results() { Message = e.Message, HasError = true };
+            }
         }
-
 
 
 

@@ -14,6 +14,7 @@
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/SelectChange.js"></script>
+    <script src="~/Scripts/ExecuteClick.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {
@@ -22,7 +23,7 @@
                 $.ajax({
                     data: { count: count },
                     type: "POST",
-                    url: "/Home/btnAdd_Click",
+                    url: "/Home/add_Click",
                     success: function (partialView) {
                         $('#Processes').append(partialView);
                         console.log('成功');
@@ -32,42 +33,14 @@
                     }
                 })
             });
-            $('#execute').click(function () {
-                var processes = new Array();
-                var count = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
-                for (var i = 1; i < count + 1; i++) {
-                    var process = {
-                        Shori: $('#shori_' + i).val(),
-                        Arg1: $('#argument1_' + i).val(),
-                        Arg2: $('#argument2_' + i).val(),
-                        Arg3: $('#argument3_' + i).val(),
-                        Arg4: $('#argument4_' + i).val(),
-                        Arg5: $('#argument5_' + i).val(),
-                    };
-                    processes.push(process);
-                }
-                var model = {
-                    ReadPath: $('#readPath').val(),
-                    OutputPath: $('#outputPath').val(),
-                };
-                model.Processes = processes;
-                $.ajax({
-                    contentType: "application/json",
-                    data: JSON.stringify(model),
-                    type: "POST",
-                    url: "/Home/btnExecute_Click",
-                    success: function () {
-                        console.log('成功');
-                    },
-                    error: function () {
-                        console.log('失敗');
-                    }
-                })
+            $("#readConfiguration").on("click", () => {
+                $("#readConfigurationDisplayNone").click();
+                return false;
             });
         });
-                                    //$(window).on('beforeunload', function (e) {
-                                    //    return '';
-                                    //});
+                                        //$(window).on('beforeunload', function (e) {
+                                        //    return '';
+                                        //});
     </script>
 </head>
 <body>
@@ -81,7 +54,7 @@
             <div class="form-group row">
                 <label for="" class="col-sm-2 col-form-label">読込Excel：</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="readPath" name="ReadPath" value="C:\Users\aoike\Desktop\読込Excel.xlsx">
+                    <input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx" value="C:\Users\aoike\Desktop\読込Excel.xlsx">
                 </div>
             </div>
         </div>
@@ -89,7 +62,7 @@
             <div class="form-group row">
                 <label for="" class="col-sm-2 col-form-label">出力Excel：</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="outputPath" name="OutputPath" value="C:\Users\aoike\Desktop\出力Excel.xlsx">
+                    <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx" value="C:\Users\aoike\Desktop\出力Excel.xlsx">
                 </div>
             </div>
         </div>
@@ -104,6 +77,7 @@
         <div class="container">
             <div align="right">
                 <button id="add" class="btn-square-shadow">追加</button>
+                <input type="file" accept=".xlsx" id="readConfigurationDisplayNone" style="display:none"/>
                 <button id="readConfiguration" class="btn-square-shadow">設定読込</button>
                 <button id="save" class="btn-square-shadow">保存</button>
                 <button id="execute" class="btn-square-shadow">実行</button>

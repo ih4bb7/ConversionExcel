@@ -7,12 +7,16 @@
     var id3 = "argument3_" + processCount;
     var id4 = "argument4_" + processCount;
     var id5 = "argument5_" + processCount;
-    if (value == "") {
-        readOnly5(id1, id2, id3, id4, id5);
-    }
-    else if (value == "書き込み") {
-        readOnly2(id1, id2, id3, id4, id5);
-        placeholder3(id1, id2, id3, "シート名", "セル番地", "値");
+    switch (value) {
+        case "":
+            readOnly5(id1, id2, id3, id4, id5);
+            break;
+        case "書き込み":
+            readOnly2(id1, id2, id3, id4, id5);
+            placeholder3(id1, id2, id3, "シート名", "セル番地", "値");
+            break;
+        default:
+            break;
     }
 }
 

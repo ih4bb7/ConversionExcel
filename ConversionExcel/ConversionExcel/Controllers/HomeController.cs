@@ -1,4 +1,5 @@
 ﻿using ConversionExcel.Models;
+using ConversionExcel.Enum;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -6,6 +7,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.HtmlControls;
+using Microsoft.Ajax.Utilities;
+using System.Web.Helpers;
 
 namespace ConversionExcel.Controllers
 {
@@ -25,16 +28,22 @@ namespace ConversionExcel.Controllers
             };
             return View(parent);
         }
-        public ActionResult btnAdd_Click(int count)
+        public ActionResult add_Click(int count)
         {
             ViewBag.Count = count + 1;
             return PartialView("_Processes", new Process());
         }
-        public void btnExecute_Click(Parent parent)
+        public JsonResult execute_Click(Parent parent)
         {
-            //var excelDriver = new ExcelDriver();
-            //excelDriver.Execute();
-            return;
+            var excelDriver = new ExcelDriver();
+            var results = excelDriver.Execute(parent);
+            return Json(new{ result = results.Message });
         }
+
+        //public JsonResult readConfiguration_Click()
+        //{
+            
+        //    return Json(new{ result = results.Message });
+        //}
     }
 }
