@@ -104,6 +104,11 @@ function readOnly4(id1, id2, id3, id4, id5) {
 }
 
 function readOnly5(id1, id2, id3, id4, id5) {
+    document.getElementById(id1).value = "";
+    document.getElementById(id2).value = "";
+    document.getElementById(id3).value = "";
+    document.getElementById(id4).value = "";
+    document.getElementById(id5).value = "";
     document.getElementById(id1).readOnly = true;
     document.getElementById(id2).readOnly = true;
     document.getElementById(id3).readOnly = true;

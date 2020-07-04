@@ -12,16 +12,47 @@ namespace ConversionExcel.Models
 {
     public class ExcelDriver
     {
-        //public Results ReadConfiguration()
-        //{
-
-        //}
-        public Results Execute(Parent model)
+        public Results ReadConfiguration(string path)
         {
-            var readPath = model.ReadPath;
-            var outputPath = model.OutputPath;
+            if (!File.Exists(path)) return new Results() { Message = ConstValue.NOT_EXISTS_FILE };
 
-            if (!File.Exists(readPath)) return new Results() { Message = ConstValue.NOT_EXISTS_READ_EXCEL, HasError = true };
+            var configurationExcel = new ExcelDriverCore(path);
+            var parent = new Parent();
+            parent.Processes = new List<Process>();
+            var process = new Process();
+
+            using (var configurationPackage = new ExcelPackage(configurationExcel.FileInfo))
+            {
+                try
+                {
+                    parent.ReadPath = configurationExcel.Reading(configurationPackage, "実行設定", "B1");
+                    parent.OutputPath = configurationExcel.Reading(configurationPackage, "実行設定", "B2");
+                    var rowCount = 5;
+                    while (!string.IsNullOrEmpty(process.Shori = configurationExcel.Reading(configurationPackage, "実行設定", "A" + rowCount)))
+                    {
+                        process.Arg1 = configurationExcel.Reading(configurationPackage, "実行設定", "B" + rowCount);
+                        process.Arg2 = configurationExcel.Reading(configurationPackage, "実行設定", "C" + rowCount);
+                        process.Arg3 = configurationExcel.Reading(configurationPackage, "実行設定", "D" + rowCount);
+                        process.Arg4 = configurationExcel.Reading(configurationPackage, "実行設定", "E" + rowCount);
+                        process.Arg5 = configurationExcel.Reading(configurationPackage, "実行設定", "F" + rowCount);
+                        parent.Processes.Add(process);
+                        process = new Process();
+                        rowCount++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    return new Results() { Message = e.Message };
+                }
+            }
+            return new Results() { Message = ConstValue.SUCCESS, Parent = parent };
+        }
+        public Results Execute(Parent parent)
+        {
+            var readPath = parent.ReadPath;
+            var outputPath = parent.OutputPath;
+
+            if (!File.Exists(readPath)) return new Results() { Message = ConstValue.NOT_EXISTS_FILE };
 
             var readExcel = new ExcelDriverCore(readPath);
             var outputExcel = new ExcelDriverCore(outputPath);
@@ -30,33 +61,47 @@ namespace ConversionExcel.Models
             using (var readPackage = new ExcelPackage(readExcel.FileInfo))
             using (var outputPackage = new ExcelPackage(outputExcel.FileInfo))
             {
-                outputExcel.NewCreate(outputPath, outputPackage);
+                try
+                {
+                    outputExcel.NewCreate(outputPath, outputPackage);
+                }
+                catch (Exception e)
+                {
+                    return new Results() { Message = e.InnerException.ToString() };
+                }
 
-                results = ExecuteCore(readExcel, outputExcel, readPackage, outputPackage, model);
+                results = ExecuteCore(readExcel, outputExcel, readPackage, outputPackage, parent);
             }
 
             return results;
         }
-        private Results ExecuteCore(ExcelDriverCore readExcel, ExcelDriverCore outputExcel, ExcelPackage readPackage, ExcelPackage outputPackage, Parent model)
+        private Results ExecuteCore(ExcelDriverCore readExcel, ExcelDriverCore outputExcel, ExcelPackage readPackage, ExcelPackage outputPackage, Parent parent)
         {
             var count = 0;
-            foreach (var process in model.Processes)
+            try
             {
-                count++;
-
-                if (process.Shori == ConstValue.WRITING)
+                foreach (var process in parent.Processes)
                 {
-                    var results = outputExcel.Writing(outputPackage, process.Arg1, process.Arg2, process.Arg3);
-                    if (results.HasError)
+                    count++;
+
+                    // 処理をどんどん増やしていく
+                    if (process.Shori == null)
                     {
-                        results.Message = ConstValue.Processing_Content + count + ":" + results.Message;
-                        return results;
+                        continue;
                     }
-                    continue;
+                    if (process.Shori == ConstValue.WRITING)
+                    {
+                        outputExcel.Writing(outputPackage, process.Arg1, process.Arg2, process.Arg3);
+                        continue;
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                return new Results() { Message = ConstValue.PROCESSING_CONTENT + count + "：" + e.Message };
+            }
 
-            return new Results() { Message = ConstValue.SUCCESS, HasError = false };
+            return new Results() { Message = ConstValue.SUCCESS };
         }
     }
 }

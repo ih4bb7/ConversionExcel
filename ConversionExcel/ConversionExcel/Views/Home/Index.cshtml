@@ -15,6 +15,7 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/SelectChange.js"></script>
     <script src="~/Scripts/ExecuteClick.js"></script>
+    <script src="~/Scripts/ReadConfigurationClick.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {
@@ -33,14 +34,10 @@
                     }
                 })
             });
-            $("#readConfiguration").on("click", () => {
-                $("#readConfigurationDisplayNone").click();
-                return false;
-            });
         });
-                                        //$(window).on('beforeunload', function (e) {
-                                        //    return '';
-                                        //});
+                                                    //$(window).on('beforeunload', function (e) {
+                                                    //    return '';
+                                                    //});
     </script>
 </head>
 <body>
@@ -52,9 +49,21 @@
     <form id="mainForm">
         <div class="container">
             <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">設定Excel：</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="configurationPath" name="ConfigurationPath" placeholder="例：C:\作業\設定Excel.xlsx" value="C:\Users\aoike\Desktop\設定Excel.xlsx">
+                </div>
+                <div class="col-sm-2">
+                    <button id="readConfiguration" class="btn-square-shadow" type="button">設定読込</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="form-group row">
                 <label for="" class="col-sm-2 col-form-label">読込Excel：</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx" value="C:\Users\aoike\Desktop\読込Excel.xlsx">
+                    @*<input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx" value="C:\Users\aoike\Desktop\読込Excel.xlsx">*@
+                    <input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx">
                 </div>
             </div>
         </div>
@@ -62,7 +71,8 @@
             <div class="form-group row">
                 <label for="" class="col-sm-2 col-form-label">出力Excel：</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx" value="C:\Users\aoike\Desktop\出力Excel.xlsx">
+                    @*<input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx" value="C:\Users\aoike\Desktop\出力Excel.xlsx">*@
+                    <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx" >
                 </div>
             </div>
         </div>
@@ -75,10 +85,8 @@
     </form>
     <footer>
         <div class="container">
-            <div align="right">
+            <div align="right" class="form-inline row">
                 <button id="add" class="btn-square-shadow">追加</button>
-                <input type="file" accept=".xlsx" id="readConfigurationDisplayNone" style="display:none"/>
-                <button id="readConfiguration" class="btn-square-shadow">設定読込</button>
                 <button id="save" class="btn-square-shadow">保存</button>
                 <button id="execute" class="btn-square-shadow">実行</button>
                 <button id="exeOutPut" class="btn-square-shadow">exe出力</button>

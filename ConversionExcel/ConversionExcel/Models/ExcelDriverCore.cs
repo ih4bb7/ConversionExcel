@@ -31,19 +31,20 @@ namespace ConversionExcel.Models
         /// <summary>
         /// 書き込み
         /// </summary>
-        public Results Writing(ExcelPackage package, string sheetName, string cell, string value)
+        public void Writing(ExcelPackage package, string sheetName, string cell, string value)
         {
-            try
-            {
+            var sheet = package.Workbook.Worksheets[sheetName];
+            sheet.Cells[cell].Value = value;
+            package.Save();
+            return;
+        }
+        /// <summary>
+        /// 読み込み
+        /// </summary>
+        public string Reading(ExcelPackage package, string sheetName, string cell)
+        {
                 var sheet = package.Workbook.Worksheets[sheetName];
-                sheet.Cells[cell].Value = value;
-                package.Save();
-                return new Results() { Message = ConstValue.SUCCESS, HasError = false };
-            }
-            catch (Exception e)
-            {
-                return new Results() { Message = e.Message, HasError = true };
-            }
+                return sheet.Cells[cell].Text;
         }
 
 
