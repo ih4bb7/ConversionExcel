@@ -5,11 +5,7 @@
             type: "POST",
             url: "/Home/readConfiguration_Click",
             success: function (result) {
-                if (!result.result.IsFile) {
-                    alert('ファイルが存在しません');
-                    return false;
-                }
-                if (result.result.HasError) {
+                if (!result.result.IsFile || result.result.HasError) {
                     alert(result.result.Message);
                     return false;
                 }

@@ -11,6 +11,7 @@ using Microsoft.Ajax.Utilities;
 using System.Web.Helpers;
 using System.Text;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace ConversionExcel.Controllers
 {
@@ -43,10 +44,9 @@ namespace ConversionExcel.Controllers
         }
         public JsonResult readConfiguration_Click(string path)
         {
-            if (!System.IO.File.Exists(path)) return Json(new { result = new Results() { IsFile = false } });
             var excelDriver = new ExcelDriver();
             var results = excelDriver.ReadConfiguration(path);
-            if (results.HasError) return Json(new { result = results });
+            if (results.HasError || !results.IsFile) return Json(new { result = results });
             results.PartialView = CreatePartialView();
             return Json(new { result = results });
         }
@@ -54,7 +54,73 @@ namespace ConversionExcel.Controllers
         {
             var excelDriver = new ExcelDriver();
             var results = excelDriver.Save(parent);
-            return Json(new { result = results.Message });
+            return Json(new { result = results });
+        }
+        public JsonResult exeOutPut_Click(Parent parent)
+        {
+            var destDir = @"C:\Executor";
+            var results = new Results();
+
+            try
+            {
+                if (!Directory.Exists(destDir))
+                {
+                    Directory.CreateDirectory(destDir);
+                }
+
+                using (var wc = new System.Net.WebClient())
+                {
+                    var oriDir = @"C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\Executor";
+                    var files = Directory.GetFiles(oriDir, "*", SearchOption.AllDirectories).ToList();
+                    foreach (var file in files)
+                    {
+                        wc.DownloadFile(file, Path.Combine(destDir, Path.GetFileName(file)));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                results.Message = e.Message;
+                return Json(new { result = results });
+            }
+
+            var excelDriver = new ExcelDriver();
+            parent.ConfigurationPath = Path.Combine(destDir, "設定Excel.xlsx");
+            results = excelDriver.Save(parent);
+            if (results.HasError || !results.IsFile)
+            {
+                results.Message = destDir + "に出力しましたが、設定の保存には失敗しました" + Environment.NewLine + "エラー内容：" + results.Message;
+                return Json(new { result = results });
+            }
+            results.Message = destDir + "に出力しました";
+            return Json(new { result = results });
+        }
+        public JsonResult configurationDownload_Click()
+        {
+            var destDir = @"C:\Executor";
+            var results = new Results();
+
+            try
+            {
+                if (!Directory.Exists(destDir))
+                {
+                    Directory.CreateDirectory(destDir);
+                }
+
+                using (var wc = new System.Net.WebClient())
+                {
+                    var oriConfigurationExcel = @"C:\Users\aoike\source\repos\ih4bb7\ConversionExcel\ConversionExcel\ConversionExcel\Executor\設定Excel.xlsx";
+                    wc.DownloadFile(oriConfigurationExcel, Path.Combine(destDir, "設定Excel.xlsx"));
+                }
+            }
+            catch (Exception e)
+            {
+                results.Message = e.Message;
+                return Json(new { result = results });
+            }
+
+            results.Message = destDir + "に出力しました";
+            return Json(new { result = results });
         }
         private string CreatePartialView()
         {

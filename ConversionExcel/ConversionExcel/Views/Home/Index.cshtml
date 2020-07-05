@@ -1,7 +1,4 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
-}
-@{
     Layout = null;
 }
 @model ConversionExcel.Models.Parent
@@ -9,7 +6,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Excelを変換するサイト</title>
+    <title>KelpEx</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -17,6 +14,7 @@
     <script src="~/Scripts/executeClick.js"></script>
     <script src="~/Scripts/readConfigurationClick.js"></script>
     <script src="~/Scripts/saveClick.js"></script>
+    <script src="~/Scripts/exeOutPutClick.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {
@@ -28,6 +26,19 @@
                     url: "/Home/add_Click",
                     success: function (partialView) {
                         $('#Processes').append(partialView);
+                        console.log('成功');
+                    },
+                    error: function () {
+                        console.log('失敗');
+                    }
+                })
+            });
+            $('#configurationDownload').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/configurationDownload_Click",
+                    success: function (result) {
+                        alert(result.result.Message);
                         console.log('成功');
                     },
                     error: function () {
@@ -85,6 +96,7 @@
     <footer>
         <div class="container">
             <div align="right" class="form-inline row">
+                <button id="configurationDownload" class="btn-square-shadow">設定Excelひな形ダウンロード</button>
                 <button id="add" class="btn-square-shadow">追加</button>
                 <button id="save" class="btn-square-shadow">保存</button>
                 <button id="execute" class="btn-square-shadow">実行</button>
