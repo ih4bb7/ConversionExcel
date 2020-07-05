@@ -46,6 +46,7 @@ namespace ConversionExcel.Controllers
             if (!System.IO.File.Exists(path)) return Json(new { result = new Results() { IsFile = false } });
             var excelDriver = new ExcelDriver();
             var results = excelDriver.ReadConfiguration(path);
+            if (results.HasError) return Json(new { result = results });
             results.PartialView = CreatePartialView();
             return Json(new { result = results });
         }

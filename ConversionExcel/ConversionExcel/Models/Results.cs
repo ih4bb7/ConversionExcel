@@ -12,5 +12,6 @@ namespace ConversionExcel.Models
         public Parent Parent;
         public string PartialView;
         public bool IsFile = true;
+        public bool HasError;
     }
 }

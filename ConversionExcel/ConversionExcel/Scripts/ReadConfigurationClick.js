@@ -9,6 +9,10 @@
                     alert('ファイルが存在しません');
                     return false;
                 }
+                if (result.result.HasError) {
+                    alert(result.result.Message);
+                    return false;
+                }
                 var processCount = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
                 for (var i = 1; i < processCount + 1; i++) {
                     if (i == 1) continue;

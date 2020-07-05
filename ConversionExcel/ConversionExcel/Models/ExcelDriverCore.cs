@@ -12,39 +12,46 @@ namespace ConversionExcel.Models
 {
     public class ExcelDriverCore
     {
-        public FileInfo FileInfo { get; set; }
+        public ExcelPackage ExcelPackage { get; set; }
 
-        public ExcelDriverCore(string path)
+        public ExcelDriverCore(FileInfo fileInfo)
         {
-            FileInfo = new FileInfo(path);
+            ExcelPackage = new ExcelPackage(fileInfo);
         }
         /// <summary>
         /// 新規作成
         /// </summary>
-        public void NewCreate(string path, ExcelPackage package)
+        public void NewCreate(string path)
         {
             if (File.Exists(path)) return;
 
-            package.Workbook.Worksheets.Add("Sheet1");
-            package.Save();
+            ExcelPackage.Workbook.Worksheets.Add("Sheet1");
+            ExcelPackage.Save();
         }
         /// <summary>
         /// 書き込み
         /// </summary>
-        public void Writing(ExcelPackage package, string sheetName, string cell, string value)
+        public void Writing(string sheetName, string cell, string value)
         {
-            var sheet = package.Workbook.Worksheets[sheetName];
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
             sheet.Cells[cell].Value = value;
-            package.Save();
+            ExcelPackage.Save();
             return;
         }
         /// <summary>
         /// 読み込み
         /// </summary>
-        public string Reading(ExcelPackage package, string sheetName, string cell)
+        public string Reading(string sheetName, string cell)
         {
-                var sheet = package.Workbook.Worksheets[sheetName];
-                return sheet.Cells[cell].Text;
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
+            return sheet.Cells[cell].Text;
+        }
+        /// <summary>
+        /// 解放
+        /// </summary>
+        public void Dispose()
+        {
+            ExcelPackage.Dispose();
         }
 
 
