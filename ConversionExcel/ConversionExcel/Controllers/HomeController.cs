@@ -49,6 +49,12 @@ namespace ConversionExcel.Controllers
             results.PartialView = CreatePartialView();
             return Json(new { result = results });
         }
+        public JsonResult save_Click(Parent parent)
+        {
+            var excelDriver = new ExcelDriver();
+            var results = excelDriver.Save(parent);
+            return Json(new { result = results.Message });
+        }
         private string CreatePartialView()
         {
             var partialView = new StringBuilder();

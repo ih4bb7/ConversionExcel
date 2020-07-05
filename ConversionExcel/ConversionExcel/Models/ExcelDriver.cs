@@ -12,6 +12,44 @@ namespace ConversionExcel.Models
 {
     public class ExcelDriver
     {
+        public Results Save(Parent parent)
+        {
+            if (!File.Exists(parent.ConfigurationPath)) return new Results() { Message = ConstValue.NOT_EXISTS_CONFIGRATIONFILE };
+
+            var configurationExcel = new ExcelDriverCore(parent.ConfigurationPath);
+            var results = new Results();
+
+            using (var configurationPackage = new ExcelPackage(configurationExcel.FileInfo))
+            {
+                results = SaveCore(configurationExcel, configurationPackage, parent);
+            }
+
+            return results;
+        }
+        private Results SaveCore(ExcelDriverCore configurationExcel, ExcelPackage configurationPackage, Parent parent)
+        {
+            try
+            {
+                configurationExcel.Writing(configurationPackage, "実行設定", "B1", parent.ReadPath);
+                configurationExcel.Writing(configurationPackage, "実行設定", "B2", parent.OutputPath);
+
+                for (int i = 0; i < parent.Processes.Count; i++)
+                {
+                    configurationExcel.Writing(configurationPackage, "実行設定", "A" + (i + 5), parent.Processes[i].Shori == null ? "" : parent.Processes[i].Shori);
+                    configurationExcel.Writing(configurationPackage, "実行設定", "B" + (i + 5), parent.Processes[i].Arg1 == null ? "" : parent.Processes[i].Arg1);
+                    configurationExcel.Writing(configurationPackage, "実行設定", "C" + (i + 5), parent.Processes[i].Arg2 == null ? "" : parent.Processes[i].Arg2);
+                    configurationExcel.Writing(configurationPackage, "実行設定", "D" + (i + 5), parent.Processes[i].Arg3 == null ? "" : parent.Processes[i].Arg3);
+                    configurationExcel.Writing(configurationPackage, "実行設定", "E" + (i + 5), parent.Processes[i].Arg4 == null ? "" : parent.Processes[i].Arg4);
+                    configurationExcel.Writing(configurationPackage, "実行設定", "F" + (i + 5), parent.Processes[i].Arg5 == null ? "" : parent.Processes[i].Arg5);
+                }
+            }
+            catch (Exception e)
+            {
+                return new Results() { Message = e.Message };
+            }
+
+            return new Results() { Message = ConstValue.SUCCESS };
+        }
         public Results ReadConfiguration(string path)
         {
             if (!File.Exists(path)) return new Results() { Message = ConstValue.NOT_EXISTS_FILE };

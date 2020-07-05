@@ -13,9 +13,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <script src="~/Scripts/SelectChange.js"></script>
-    <script src="~/Scripts/ExecuteClick.js"></script>
-    <script src="~/Scripts/ReadConfigurationClick.js"></script>
+    <script src="~/Scripts/selectChange.js"></script>
+    <script src="~/Scripts/executeClick.js"></script>
+    <script src="~/Scripts/readConfigurationClick.js"></script>
+    <script src="~/Scripts/saveClick.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {
@@ -62,7 +63,6 @@
             <div class="form-group row">
                 <label for="" class="col-sm-2 col-form-label">読込Excel：</label>
                 <div class="col-sm-10">
-                    @*<input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx" value="C:\Users\aoike\Desktop\読込Excel.xlsx">*@
                     <input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx">
                 </div>
             </div>
@@ -71,7 +71,6 @@
             <div class="form-group row">
                 <label for="" class="col-sm-2 col-form-label">出力Excel：</label>
                 <div class="col-sm-10">
-                    @*<input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx" value="C:\Users\aoike\Desktop\出力Excel.xlsx">*@
                     <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx" >
                 </div>
             </div>

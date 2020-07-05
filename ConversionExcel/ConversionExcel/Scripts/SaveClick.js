@@ -1,5 +1,5 @@
 ﻿$(function () {
-    $('#execute').click(function () {
+    $('#save').click(function () {
         var processes = new Array();
         var count = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
         for (var i = 1; i < count + 1; i++) {
@@ -14,6 +14,7 @@
             processes.push(process);
         }
         var parent = {
+            ConfigurationPath: $('#configurationPath').val(),
             ReadPath: $('#readPath').val(),
             OutputPath: $('#outputPath').val(),
         };
@@ -23,7 +24,7 @@
             contentType: "application/json",
             data: JSON.stringify(parent),
             type: "POST",
-            url: "/Home/execute_Click",
+            url: "/Home/save_Click",
             success: function (result) {
                 alert(result.result);
                 console.log('成功');
