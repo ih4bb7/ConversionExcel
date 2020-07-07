@@ -5,16 +5,14 @@
 
 <html>
 <head>
+    <link rel="icon" href="~/favicon.ico">
     <meta name="viewport" content="width=device-width" />
-    <title>KelpEx</title>
+    <title>Kelpex</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/selectChange.js"></script>
-    <script src="~/Scripts/executeClick.js"></script>
     <script src="~/Scripts/readConfigurationClick.js"></script>
-    <script src="~/Scripts/saveClick.js"></script>
-    <script src="~/Scripts/exeOutPutClick.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {
@@ -34,9 +32,34 @@
                 })
             });
             $('#configurationDownload').click(function () {
+                document.getElementById('configurationDownloadHidden').click();
+            });
+            $('#save').click(function () {
+                var processes = new Array();
+                var count = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
+                for (var i = 1; i < count + 1; i++) {
+                    var process = {
+                        Shori: $('#shori_' + i).val(),
+                        Arg1: $('#argument1_' + i).val(),
+                        Arg2: $('#argument2_' + i).val(),
+                        Arg3: $('#argument3_' + i).val(),
+                        Arg4: $('#argument4_' + i).val(),
+                        Arg5: $('#argument5_' + i).val(),
+                    };
+                    processes.push(process);
+                }
+                var parent = {
+                    ConfigurationPath: $('#configurationPath').val(),
+                    ReadPath: $('#readPath').val(),
+                    OutputPath: $('#outputPath').val(),
+                };
+                parent.Processes = processes;
+
                 $.ajax({
+                    contentType: "application/json",
+                    data: JSON.stringify(parent),
                     type: "POST",
-                    url: "/Home/configurationDownload_Click",
+                    url: "@Url.Action("save_Click", "Home")",
                     success: function (result) {
                         alert(result.result.Message);
                         console.log('成功');
@@ -46,10 +69,98 @@
                     }
                 })
             });
+            $("#readConfiguration").click(function () {
+                $.ajax({
+                    data: { path: $('#configurationPath').val() },
+                    type: "POST",
+                    url: "@Url.Action("readConfiguration_Click", "Home")",
+                    success: function (result) {
+                        if (!result.result.IsFile || result.result.HasError) {
+                            alert(result.result.Message);
+                            return false;
+                        }
+                        var processCount = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
+                        for (var i = 1; i < processCount + 1; i++) {
+                            if (i == 1) continue;
+                            $('#process_' + i).remove();
+                        }
+                        document.getElementById('readPath').value = result.result.Parent.ReadPath;
+                        document.getElementById('outputPath').value = result.result.Parent.OutputPath;
+                        for (var i = 1; i < result.result.Parent.Processes.length + 1; i++) {
+                            document.getElementById('shori_' + i).value = result.result.Parent.Processes[i - 1].Shori;
+                            var id1 = 'argument1_' + i;
+                            var id2 = 'argument2_' + i;
+                            var id3 = 'argument3_' + i;
+                            var id4 = 'argument4_' + i;
+                            var id5 = 'argument5_' + i;
+                            switch (result.result.Parent.Processes[i - 1].Shori) {
+                                case "":
+                                    readOnly5(id1, id2, id3, id4, id5);
+                                    break;
+                                case "書き込み":
+                                    readOnly2(id1, id2, id3, id4, id5);
+                                    placeholder3(id1, id2, id3, "シート名", "セル番地", "値");
+                                    value3(
+                                        i
+                                        , result.result.Parent.Processes[i - 1].Arg1
+                                        , result.result.Parent.Processes[i - 1].Arg2
+                                        , result.result.Parent.Processes[i - 1].Arg3
+                                    )
+                                    break;
+                                default:
+                                    break;
+                            }
+                            $('#Processes').append(result.result.PartialView.replace(/Count/g, i + 1));
+                        }
+                        console.log('成功');
+                    },
+                    error: function () {
+                        console.log('失敗');
+                    }
+                })
+            });
+            $('#exeDownload').click(function () {
+                document.getElementById('exeDownloadHidden').click();
+                alert('設定Excelをzip内のexeと同階層において実行してください');
+            });
+            $('#execute').click(function () {
+                var processes = new Array();
+                var count = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
+                for (var i = 1; i < count + 1; i++) {
+                    var process = {
+                        Shori: $('#shori_' + i).val(),
+                        Arg1: $('#argument1_' + i).val(),
+                        Arg2: $('#argument2_' + i).val(),
+                        Arg3: $('#argument3_' + i).val(),
+                        Arg4: $('#argument4_' + i).val(),
+                        Arg5: $('#argument5_' + i).val(),
+                    };
+                    processes.push(process);
+                }
+                var parent = {
+                    ReadPath: $('#readPath').val(),
+                    OutputPath: $('#outputPath').val(),
+                };
+                parent.Processes = processes;
+
+                $.ajax({
+                    contentType: "application/json",
+                    data: JSON.stringify(parent),
+                    type: "POST",
+                    url: "@Url.Action("execute_Click", "Home")",
+                    success: function (result) {
+                        alert(result.result);
+                        console.log('成功');
+                    },
+                    error: function () {
+                        console.log('失敗');
+                    }
+                })
+            });
         });
-                                                    //$(window).on('beforeunload', function (e) {
-                                                    //    return '';
-                                                    //});
+        $(window).on('beforeunload', function (e) {
+            return '';
+        });
     </script>
 </head>
 <body>
@@ -82,7 +193,7 @@
             <div class="form-group row">
                 <label for="" class="col-sm-2 col-form-label">出力Excel：</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx" >
+                    <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx">
                 </div>
             </div>
         </div>
@@ -96,11 +207,13 @@
     <footer>
         <div class="container">
             <div align="right" class="form-inline row">
+                <a id="configurationDownloadHidden" href="~/Executor/設定Excel.xlsx" style="visibility:hidden" download>設定Excelひな形ダウンロード</a>
+                <a id="exeDownloadHidden" href="~/Executor/Kelpex.zip" style="visibility:hidden" download>実行exeダウンロード</a>
                 <button id="configurationDownload" class="btn-square-shadow">設定Excelひな形ダウンロード</button>
                 <button id="add" class="btn-square-shadow">追加</button>
                 <button id="save" class="btn-square-shadow">保存</button>
                 <button id="execute" class="btn-square-shadow">実行</button>
-                <button id="exeOutPut" class="btn-square-shadow">exe出力</button>
+                <button id="exeDownload" class="btn-square-shadow">実行exeダウンロード</button>
             </div>
         </div>
     </footer>

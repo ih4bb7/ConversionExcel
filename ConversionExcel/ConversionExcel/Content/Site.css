@@ -3,7 +3,7 @@
     padding-bottom: 20px;
     /* 背景をグラデーションにする */
     /*background: linear-gradient(45deg, #66cdaa, #e0ffff);*/
-    background: radial-gradient(#7fffd4, #66cdaa);
+    background: radial-gradient(#f0f8ff, #e6e6fa);
 }
 
 /* Set padding to keep content from hitting the edges */
