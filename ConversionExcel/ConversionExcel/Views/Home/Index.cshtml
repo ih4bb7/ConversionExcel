@@ -21,7 +21,7 @@
                 $.ajax({
                     data: { count: count },
                     type: "POST",
-                    url: "/Home/add_Click",
+                    url: "@Url.Action("add_Click", "Home")",
                     success: function (partialView) {
                         $('#Processes').append(partialView);
                         console.log('成功');
