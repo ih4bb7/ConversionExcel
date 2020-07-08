@@ -42,12 +42,26 @@ namespace ConversionExcel.Controllers
             var results = excelDriver.Execute(parent);
             return Json(new { result = results.Message });
         }
+        public JsonResult Upload()
+        {
+            var file = Request.Files[0];
+            if (file.ContentLength == 0) return Json(new { result = new Results() });
+
+            var dir = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            Directory.CreateDirectory(dir);
+            var filePath = Path.Combine(dir, Path.GetFileName(file.FileName));
+
+            file.SaveAs(filePath);
+            return Json(new { result = new Results() { Path = filePath } });
+        }
         public JsonResult readConfiguration_Click(string path)
         {
             var excelDriver = new ExcelDriver();
             var results = excelDriver.ReadConfiguration(path);
             if (results.HasError || !results.IsFile) return Json(new { result = results });
             results.PartialView = CreatePartialView();
+            System.IO.File.Delete(path);
+            Directory.Delete(Path.GetDirectoryName(path));
             return Json(new { result = results });
         }
         public JsonResult save_Click(Parent parent)

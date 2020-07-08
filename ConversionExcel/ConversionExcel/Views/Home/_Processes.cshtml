@@ -1,20 +1,25 @@
 ﻿@model ConversionExcel.Models.Process
 
-    <div class="container" id="process_@ViewBag.Count">
-        <div class="form-group row">
-            <label for="" class="col-sm-2 col-form-label">処理内容 @ViewBag.Count：</label>
-            <div class="col-sm-10">
-                <select id="shori_@ViewBag.Count" class="form-control" onchange="selectChange()">
-                    <option></option>
-                    <option>書き込み</option>
-                </select>
-                <p class="form-inline">
-                    <input type="text" class="form-control" id="argument1_@ViewBag.Count" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument2_@ViewBag.Count" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument3_@ViewBag.Count" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument4_@ViewBag.Count" style="width:19.6%" readonly="readonly">
-                    <input type="text" class="form-control" id="argument5_@ViewBag.Count" style="width:19.6%" readonly="readonly">
-                </p>
-            </div>
+<div class="container" id="process_@ViewBag.Count">
+    <div class="form-group row">
+        <label for="" class="col-sm-2 col-form-label">処理内容 @ViewBag.Count：</label>
+        <div class="col-sm-10">
+            <form>
+                <div class="col-sm-12">
+                    <select id="shori_@ViewBag.Count" class="form-control" onchange="selectChange()">
+                        <option></option>
+                        <option>書き込み</option>
+                    </select>
+                    <p class="form-inline">
+                        <input type="text" class="form-control" id="argument1_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                        <input type="text" class="form-control" id="argument2_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                        <input type="text" class="form-control" id="argument3_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                        <input type="text" class="form-control" id="argument4_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                        <input type="text" class="form-control" id="argument5_@ViewBag.Count" style="width:19.6%" readonly="readonly">
+                    </p>
+                </div>
+            </form>
         </div>
+
     </div>
+</div>

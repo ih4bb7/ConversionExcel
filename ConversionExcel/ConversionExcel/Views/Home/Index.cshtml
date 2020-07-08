@@ -69,56 +69,6 @@
                     }
                 })
             });
-            $("#readConfiguration").click(function () {
-                $.ajax({
-                    data: { path: $('#configurationPath').val() },
-                    type: "POST",
-                    url: "@Url.Action("readConfiguration_Click", "Home")",
-                    success: function (result) {
-                        if (!result.result.IsFile || result.result.HasError) {
-                            alert(result.result.Message);
-                            return false;
-                        }
-                        var processCount = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
-                        for (var i = 1; i < processCount + 1; i++) {
-                            if (i == 1) continue;
-                            $('#process_' + i).remove();
-                        }
-                        document.getElementById('readPath').value = result.result.Parent.ReadPath;
-                        document.getElementById('outputPath').value = result.result.Parent.OutputPath;
-                        for (var i = 1; i < result.result.Parent.Processes.length + 1; i++) {
-                            document.getElementById('shori_' + i).value = result.result.Parent.Processes[i - 1].Shori;
-                            var id1 = 'argument1_' + i;
-                            var id2 = 'argument2_' + i;
-                            var id3 = 'argument3_' + i;
-                            var id4 = 'argument4_' + i;
-                            var id5 = 'argument5_' + i;
-                            switch (result.result.Parent.Processes[i - 1].Shori) {
-                                case "":
-                                    readOnly5(id1, id2, id3, id4, id5);
-                                    break;
-                                case "書き込み":
-                                    readOnly2(id1, id2, id3, id4, id5);
-                                    placeholder3(id1, id2, id3, "シート名", "セル番地", "値");
-                                    value3(
-                                        i
-                                        , result.result.Parent.Processes[i - 1].Arg1
-                                        , result.result.Parent.Processes[i - 1].Arg2
-                                        , result.result.Parent.Processes[i - 1].Arg3
-                                    )
-                                    break;
-                                default:
-                                    break;
-                            }
-                            $('#Processes').append(result.result.PartialView.replace(/Count/g, i + 1));
-                        }
-                        console.log('成功');
-                    },
-                    error: function () {
-                        console.log('失敗');
-                    }
-                })
-            });
             $('#exeDownload').click(function () {
                 document.getElementById('exeDownloadHidden').click();
                 alert('設定Excelをzip内のexeと同階層において実行してください');
@@ -157,10 +107,83 @@
                     }
                 })
             });
+            $('#upload').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("Upload", "Home")',
+                    type: this.method,
+                    data: new FormData(this),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        $.ajax({
+                            data: { path: result.result.Path },
+                            type: "POST",
+                            url: "@Url.Action("readConfiguration_Click", "Home")",
+                            success: function (result) {
+                                if (!result.result.IsFile || result.result.HasError) {
+                                    alert(result.result.Message);
+                                    return false;
+                                }
+                                var processCount = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
+                                for (var i = 1; i < processCount + 1; i++) {
+                                    if (i == 1) continue;
+                                    $('#process_' + i).remove();
+                                }
+                                document.getElementById('readPath').value = result.result.Parent.ReadPath;
+                                document.getElementById('outputPath').value = result.result.Parent.OutputPath;
+                                for (var i = 1; i < result.result.Parent.Processes.length + 1; i++) {
+                                    document.getElementById('shori_' + i).value = result.result.Parent.Processes[i - 1].Shori;
+                                    var id1 = 'argument1_' + i;
+                                    var id2 = 'argument2_' + i;
+                                    var id3 = 'argument3_' + i;
+                                    var id4 = 'argument4_' + i;
+                                    var id5 = 'argument5_' + i;
+                                    switch (result.result.Parent.Processes[i - 1].Shori) {
+                                        case "":
+                                            readOnly5(id1, id2, id3, id4, id5);
+                                            break;
+                                        case "書き込み":
+                                            readOnly2(id1, id2, id3, id4, id5);
+                                            placeholder3(id1, id2, id3, "シート名", "セル番地", "値");
+                                            value3(
+                                                i
+                                                , result.result.Parent.Processes[i - 1].Arg1
+                                                , result.result.Parent.Processes[i - 1].Arg2
+                                                , result.result.Parent.Processes[i - 1].Arg3
+                                            )
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    $('#Processes').append(result.result.PartialView.replace(/Count/g, i + 1));
+                                }
+                                console.log('成功');
+                            },
+                            error: function () {
+                                console.log('失敗');
+                            }
+                        })
+                        console.log('成功');
+                    },
+                    error: function() {
+                        console.log('失敗');
+                    }
+                });
+            });
+            $('#fileUploadBtn').click(function () {
+                $('#fileUpload').click();
+                return false;
+            });
+            $("#fileUpload").change(function () {
+                var value = this.value;
+                document.getElementById("configurationPath").value = value;
+            });
         });
-        $(window).on('beforeunload', function (e) {
-            return '';
-        });
+        //$(window).on('beforeunload', function (e) {
+        //    return '';
+        //});
     </script>
 </head>
 <body>
@@ -169,41 +192,49 @@
             <h1>Excelを変換するサイト</h1>
         </div>
     </header>
+    <div class="container">
+        <div class="form-group row">
+            <label for="" class="col-sm-2 col-form-label">設定Excel：</label>
+            <div class="col-sm-10">
+                <form id="upload" enctype="multipart/form-data" method="POST">
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="configurationPath" name="ConfigurationPath">
+                    </div>
+                    <input type="file" name="fileUpload" id="fileUpload" accept=".xlsx" style="display:none" />
+                    <div class="col-sm-2">
+                        <button id="fileUploadBtn" class="btn-square-shadow">ファイル選択</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="readConfiguration" class="btn-square-shadow">設定読込</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <form id="mainForm">
         <div class="container">
             <div class="form-group row">
-                <label for="" class="col-sm-2 col-form-label">設定Excel：</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="configurationPath" name="ConfigurationPath" placeholder="例：C:\作業\設定Excel.xlsx">
-                </div>
-                <div class="col-sm-2">
-                    <button id="readConfiguration" class="btn-square-shadow" type="button">設定読込</button>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="form-group row">
-                <label for="" class="col-sm-2 col-form-label">読込Excel：</label>
+                <label for="" class="col-sm-2 col-form-label">読み込みExcel：</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx">
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="form-group row">
-                <label for="" class="col-sm-2 col-form-label">出力Excel：</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx">
-                </div>
+    </form>
+    <div class="container">
+        <div class="form-group row">
+            <label for="" class="col-sm-2 col-form-label">書き込みExcel：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx">
             </div>
         </div>
-        <div id="Processes">
-            @foreach (var process in Model.Processes)
-            {
-                @Html.Partial("_Processes", process)
-            }
-        </div>
-    </form>
+    </div>
+    <div id="Processes">
+        @foreach (var process in Model.Processes)
+        {
+            @Html.Partial("_Processes", process)
+        }
+    </div>
     <footer>
         <div class="container">
             <div align="right" class="form-inline row">
