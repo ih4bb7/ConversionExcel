@@ -120,9 +120,6 @@ namespace ConversionExcel.Models
         {
             try
             {
-                configurationExcel.Writing("実行設定", "B1", parent.ReadPath);
-                configurationExcel.Writing("実行設定", "B2", parent.OutputPath);
-
                 for (int i = 0; i < parent.Processes.Count; i++)
                 {
                     configurationExcel.Writing("実行設定", "A" + (i + 5), parent.Processes[i].Shori == null ? "" : parent.Processes[i].Shori);

@@ -49,9 +49,9 @@
                     processes.push(process);
                 }
                 var parent = {
-                    ConfigurationPath: $('#configurationPath').val(),
-                    ReadPath: $('#readPath').val(),
-                    OutputPath: $('#outputPath').val(),
+                    ConfigurationPath: "",
+                    ReadPath: "",
+                    OutputPath: "",
                 };
                 parent.Processes = processes;
 
@@ -61,7 +61,21 @@
                     type: "POST",
                     url: "@Url.Action("save_Click", "Home")",
                     success: function (result) {
+                        var target = document.getElementById('saveFileDownloadHidden');
+                        target.href = '/Kelpex/Upload/' + result.result.Path + '/設定Excel.xlsx';
+                        target.click();
                         alert(result.result.Message);
+                        $.ajax({
+                            data: { path: result.result.Path + '/設定Excel.xlsx' },
+                            type: "POST",
+                            url: "@Url.Action("Delete", "Home")",
+                            success: function (result) {
+                                console.log('成功');
+                            },
+                            error: function () {
+                                console.log('失敗');
+                            }
+                        })
                         console.log('成功');
                     },
                     error: function () {
@@ -107,7 +121,7 @@
                     }
                 })
             });
-            $('#upload').submit(function(e) {
+            $('#uploadConfigurationForm').submit(function(e) {
                 e.preventDefault();
                 $.ajax({
                     url: '@Url.Action("Upload", "Home")',
@@ -131,8 +145,6 @@
                                     if (i == 1) continue;
                                     $('#process_' + i).remove();
                                 }
-                                document.getElementById('readPath').value = result.result.Parent.ReadPath;
-                                document.getElementById('outputPath').value = result.result.Parent.OutputPath;
                                 for (var i = 1; i < result.result.Parent.Processes.length + 1; i++) {
                                     document.getElementById('shori_' + i).value = result.result.Parent.Processes[i - 1].Shori;
                                     var id1 = 'argument1_' + i;
@@ -172,11 +184,11 @@
                     }
                 });
             });
-            $('#fileUploadBtn').click(function () {
-                $('#fileUpload').click();
+            $('#uploadConfigurationFileBtn').click(function () {
+                $('#uploadConfigurationFile').click();
                 return false;
             });
-            $("#fileUpload").change(function () {
+            $("#uploadConfigurationFile").change(function () {
                 var value = this.value;
                 document.getElementById("configurationPath").value = value;
             });
@@ -196,13 +208,13 @@
         <div class="form-group row">
             <label for="" class="col-sm-2 col-form-label">設定Excel：</label>
             <div class="col-sm-10">
-                <form id="upload" enctype="multipart/form-data" method="POST">
+                <form id="uploadConfigurationForm" enctype="multipart/form-data" method="POST">
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="configurationPath" name="ConfigurationPath">
+                        <input type="text" class="form-control" id="configurationPath" readonly required>
                     </div>
-                    <input type="file" name="fileUpload" id="fileUpload" accept=".xlsx" style="display:none" />
+                    <input type="file" name="uploadConfigurationFile" id="uploadConfigurationFile" accept=".xlsx" style="display:none" />
                     <div class="col-sm-2">
-                        <button id="fileUploadBtn" class="btn-square-shadow">ファイル選択</button>
+                        <button id="uploadConfigurationFileBtn" class="btn-square-shadow">ファイル選択</button>
                     </div>
                     <div class="col-sm-2">
                         <button id="readConfiguration" class="btn-square-shadow">設定読込</button>
@@ -211,21 +223,35 @@
             </div>
         </div>
     </div>
-    <form id="mainForm">
-        <div class="container">
-            <div class="form-group row">
-                <label for="" class="col-sm-2 col-form-label">読み込みExcel：</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="readPath" name="ReadPath" placeholder="例：C:\作業\読込Excel.xlsx">
-                </div>
+    <div class="container">
+        <div class="form-group row">
+            <label for="" class="col-sm-2 col-form-label">読み込みExcel：</label>
+            <div class="col-sm-10">
+                <form id="uploadReadFileForm" enctype="multipart/form-data" method="POST">
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="readPath" readonly>
+                    </div>
+                    <input type="file" name="uploadReadFile" id="uploadReadFile" accept=".xlsx" style="display:none" />
+                    <div class="col-sm-4">
+                        <button id="uploadReadFileBtn" class="btn-square-shadow">ファイル選択</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
     <div class="container">
         <div class="form-group row">
             <label for="" class="col-sm-2 col-form-label">書き込みExcel：</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="outputPath" name="OutputPath" placeholder="例：C:\作業\出力Excel.xlsx">
+                <form id="uploadWriteFileForm" enctype="multipart/form-data" method="POST">
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="writePath" readonly>
+                    </div>
+                    <input type="file" name="uploadWriteFile" id="uploadWriteFile" accept=".xlsx" style="display:none" />
+                    <div class="col-sm-4">
+                        <button id="uploadWriteFileBtn" class="btn-square-shadow">ファイル選択</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -235,18 +261,38 @@
             @Html.Partial("_Processes", process)
         }
     </div>
-    <footer>
+    <div class="container">
+        <div class="form-group row">
+            <label for="" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <form id="btnForm" enctype="multipart/form-data" method="POST">
+                    <div class="col-sm-12 form-inline row" align="right">
+                        <a id="configurationDownloadHidden" href="~/Executor/設定Excel.xlsx" style="visibility:hidden" download>設定Excelひな形ダウンロード</a>
+                        <a id="exeDownloadHidden" href="~/Executor/Kelpex.zip" style="visibility:hidden" download>実行exeダウンロード</a>
+                        <a id="saveFileDownloadHidden" href="" style="visibility:hidden" download>保存ファイルダウンロード</a><br />
+                        <button id="configurationDownload" class="btn-square-shadow" type="button">設定Excelひな形ダウンロード</button>
+                        <button id="add" class="btn-square-shadow" type="button">処理内容追加</button>
+                        <button id="save" class="btn-square-shadow" type="button">処理内容保存</button>
+                        <button id="execute" class="btn-square-shadow" type="button">処理実行</button>
+                        <button id="exeDownload" class="btn-square-shadow" type="button">実行exeダウンロード</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @*<footer>
         <div class="container">
             <div align="right" class="form-inline row">
                 <a id="configurationDownloadHidden" href="~/Executor/設定Excel.xlsx" style="visibility:hidden" download>設定Excelひな形ダウンロード</a>
                 <a id="exeDownloadHidden" href="~/Executor/Kelpex.zip" style="visibility:hidden" download>実行exeダウンロード</a>
+                <a id="saveFileDownloadHidden" href="" style="visibility:hidden" download>保存ファイルダウンロード</a><br />
                 <button id="configurationDownload" class="btn-square-shadow">設定Excelひな形ダウンロード</button>
-                <button id="add" class="btn-square-shadow">追加</button>
-                <button id="save" class="btn-square-shadow">保存</button>
-                <button id="execute" class="btn-square-shadow">実行</button>
+                <button id="add" class="btn-square-shadow">処理内容追加</button>
+                <button id="save" class="btn-square-shadow">処理内容保存</button>
+                <button id="execute" class="btn-square-shadow">処理実行</button>
                 <button id="exeDownload" class="btn-square-shadow">実行exeダウンロード</button>
             </div>
         </div>
-    </footer>
+    </footer>*@
 </body>
 </html>

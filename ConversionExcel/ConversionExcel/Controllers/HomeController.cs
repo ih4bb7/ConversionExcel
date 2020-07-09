@@ -54,6 +54,13 @@ namespace ConversionExcel.Controllers
             file.SaveAs(filePath);
             return Json(new { result = new Results() { Path = filePath } });
         }
+        public JsonResult Delete(string path)
+        {
+            var filePath = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", path);
+            System.IO.File.Delete(filePath);
+            Directory.Delete(Path.GetDirectoryName(filePath));
+            return Json(new { result = new Results() });
+        }
         public JsonResult readConfiguration_Click(string path)
         {
             var excelDriver = new ExcelDriver();
@@ -66,8 +73,15 @@ namespace ConversionExcel.Controllers
         }
         public JsonResult save_Click(Parent parent)
         {
+            var datetimeNow = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var dir = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", datetimeNow);
+            Directory.CreateDirectory(dir);
+            var filePath = Path.Combine(dir, "設定Excel.xlsx");
+            System.IO.File.Copy(@"C:\作業\Kelpex\Kelpex\Executor\設定Excel.xlsx", filePath);
+            parent.ConfigurationPath = filePath;
             var excelDriver = new ExcelDriver();
             var results = excelDriver.Save(parent);
+            results.Path = datetimeNow;
             return Json(new { result = results });
         }
         private string CreatePartialView()
@@ -77,17 +91,21 @@ namespace ConversionExcel.Controllers
             partialView.Append("    <div class='form-group row'>" + Environment.NewLine);
             partialView.Append("        <label for='' class='col-sm-2 col-form-label'>処理内容 Count：</label>" + Environment.NewLine);
             partialView.Append("        <div class='col-sm-10'>" + Environment.NewLine);
-            partialView.Append("            <select id='shori_Count' class='form-control' onchange='selectChange()'>" + Environment.NewLine);
-            partialView.Append("                <option></option>" + Environment.NewLine);
-            partialView.Append("                <option>書き込み</option>" + Environment.NewLine);
-            partialView.Append("            </select>" + Environment.NewLine);
-            partialView.Append("            <p class='form-inline'>" + Environment.NewLine);
-            partialView.Append("                <input type='text' class='form-control' id='argument1_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
-            partialView.Append("                <input type='text' class='form-control' id='argument2_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
-            partialView.Append("                <input type='text' class='form-control' id='argument3_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
-            partialView.Append("                <input type='text' class='form-control' id='argument4_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
-            partialView.Append("                <input type='text' class='form-control' id='argument5_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
-            partialView.Append("            </p>" + Environment.NewLine);
+            partialView.Append("            <form>" + Environment.NewLine);
+            partialView.Append("                <div class='col-sm-12'>" + Environment.NewLine);
+            partialView.Append("                    <select id='shori_Count' class='form-control' onchange='selectChange()'>" + Environment.NewLine);
+            partialView.Append("                        <option></option>" + Environment.NewLine);
+            partialView.Append("                        <option>書き込み</option>" + Environment.NewLine);
+            partialView.Append("                    </select>" + Environment.NewLine);
+            partialView.Append("                    <p class='form-inline'>" + Environment.NewLine);
+            partialView.Append("                        <input type='text' class='form-control' id='argument1_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
+            partialView.Append("                        <input type='text' class='form-control' id='argument2_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
+            partialView.Append("                        <input type='text' class='form-control' id='argument3_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
+            partialView.Append("                        <input type='text' class='form-control' id='argument4_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
+            partialView.Append("                        <input type='text' class='form-control' id='argument5_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);
+            partialView.Append("                    </p>" + Environment.NewLine);
+            partialView.Append("                </div>" + Environment.NewLine);
+            partialView.Append("            </form>" + Environment.NewLine);
             partialView.Append("        </div>" + Environment.NewLine);
             partialView.Append("    </div>" + Environment.NewLine);
             partialView.Append("</div>" + Environment.NewLine);
