@@ -271,9 +271,9 @@
                 document.getElementById("writePath").value = value;
             });
         });
-        //$(window).on('beforeunload', function (e) {
-        //    return '';
-        //});
+        $(window).on('beforeunload', function (e) {
+            return '';
+        });
     </script>
 </head>
 <body>
