@@ -1,5 +1,4 @@
 ﻿using ConversionExcel.Models;
-using ConversionExcel.Enum;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -23,7 +22,7 @@ namespace ConversionExcel.Controllers
             var parent = new Parent()
             {
                 ReadPath = "",
-                OutputPath = "",
+                WritePath = "",
                 Processes = new List<Process>
                 {
                     new Process(),
@@ -40,12 +39,42 @@ namespace ConversionExcel.Controllers
         {
             var excelDriver = new ExcelDriver();
             var results = excelDriver.Execute(parent);
-            return Json(new { result = results.Message });
+            results.Path = Path.GetFileName(Path.GetDirectoryName(parent.WritePath)) + "/" + Path.GetFileName(parent.WritePath);
+            if (results.IsFile && !results.HasError) results.Message += Environment.NewLine + "ダウンロードが終了してからOKを押してください";
+            return Json(new { result = results });
         }
-        public JsonResult Upload()
+        public JsonResult UploadReadFileForExecute()
+        {
+            return Upload(Request.Files[0], ConstValue.NOT_EXISTS_READFILE);
+        }
+        public JsonResult UploadWriteFileForExecute()
         {
             var file = Request.Files[0];
-            if (file.ContentLength == 0) return Json(new { result = new Results() });
+            var fileName = string.Empty;
+            var filePath = string.Empty;
+            var dir = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            Directory.CreateDirectory(dir);
+            if (file.ContentLength == 0)
+            {
+                fileName = "書き込みExcel.xlsx";
+                filePath = Path.Combine(dir, fileName);
+            }
+            else
+            {
+                fileName = Path.GetFileName(file.FileName);
+                filePath = Path.Combine(dir, fileName);
+                file.SaveAs(filePath);
+            }
+
+            return Json(new { result = new Results() { Path = filePath } });
+        }
+        public JsonResult UploadForReadConfiguration()
+        {
+            return Upload(Request.Files[0], "");
+        }
+        private JsonResult Upload(HttpPostedFileBase file, string constValue)
+        {
+            if (file.ContentLength == 0) return Json(new { result = new Results() { IsFile = false, Message = constValue } });
 
             var dir = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", DateTime.Now.ToString("yyyyMMddHHmmss"));
             Directory.CreateDirectory(dir);
@@ -54,11 +83,20 @@ namespace ConversionExcel.Controllers
             file.SaveAs(filePath);
             return Json(new { result = new Results() { Path = filePath } });
         }
-        public JsonResult Delete(string path)
+        public JsonResult DeleteAfterSave(string path)
         {
             var filePath = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", path);
             System.IO.File.Delete(filePath);
             Directory.Delete(Path.GetDirectoryName(filePath));
+            return Json(new { result = new Results() });
+        }
+        public JsonResult DeleteAfterExecute(string readPath, string writePath)
+        {
+            var readFilePath = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", readPath);
+            var writeFilePath = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", writePath);
+            System.IO.File.Delete(readFilePath);
+            System.IO.File.Delete(writeFilePath);
+            Directory.Delete(Path.GetDirectoryName(readFilePath));
             return Json(new { result = new Results() });
         }
         public JsonResult readConfiguration_Click(string path)
@@ -82,6 +120,7 @@ namespace ConversionExcel.Controllers
             var excelDriver = new ExcelDriver();
             var results = excelDriver.Save(parent);
             results.Path = datetimeNow;
+            results.Message += Environment.NewLine + "ダウンロードが終了してからOKを押してください";
             return Json(new { result = results });
         }
         private string CreatePartialView()

@@ -68,7 +68,7 @@
                         $.ajax({
                             data: { path: result.result.Path + '/設定Excel.xlsx' },
                             type: "POST",
-                            url: "@Url.Action("Delete", "Home")",
+                            url: "@Url.Action("DeleteAfterSave", "Home")",
                             success: function (result) {
                                 console.log('成功');
                             },
@@ -85,46 +85,108 @@
             });
             $('#exeDownload').click(function () {
                 document.getElementById('exeDownloadHidden').click();
-                alert('設定Excelをzip内のexeと同階層において実行してください');
+                alert('設定Excelをzip内のexeと同階層において実行してください\r\n設定Excelはzip内に入っていないので、処理内容を保存してください');
             });
             $('#execute').click(function () {
-                var processes = new Array();
-                var count = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
-                for (var i = 1; i < count + 1; i++) {
-                    var process = {
-                        Shori: $('#shori_' + i).val(),
-                        Arg1: $('#argument1_' + i).val(),
-                        Arg2: $('#argument2_' + i).val(),
-                        Arg3: $('#argument3_' + i).val(),
-                        Arg4: $('#argument4_' + i).val(),
-                        Arg5: $('#argument5_' + i).val(),
-                    };
-                    processes.push(process);
-                }
-                var parent = {
-                    ReadPath: $('#readPath').val(),
-                    OutputPath: $('#outputPath').val(),
-                };
-                parent.Processes = processes;
+                $('#executeReadFile').click();
 
+            });
+            $('#uploadReadFileForm').submit(function(e) {
+                e.preventDefault();
                 $.ajax({
-                    contentType: "application/json",
-                    data: JSON.stringify(parent),
-                    type: "POST",
-                    url: "@Url.Action("execute_Click", "Home")",
+                    url: '@Url.Action("UploadReadFileForExecute", "Home")',
+                    type: this.method,
+                    data: new FormData(this),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
                     success: function (result) {
-                        alert(result.result);
+                        if (!result.result.IsFile) {
+                            alert(result.result.Message);
+                            return;
+                        }
+                        document.getElementById('readPathDisplayNone').value = result.result.Path;
                         console.log('成功');
+                        $('#executeWriteFile').click();
                     },
                     error: function () {
                         console.log('失敗');
                     }
-                })
+                });
+            });
+            $('#uploadWriteFileForm').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("UploadWriteFileForExecute", "Home")',
+                    type: this.method,
+                    data: new FormData(this),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        document.getElementById('writePathDisplayNone').value = result.result.Path;
+                        console.log('成功');
+                        var processes = new Array();
+                        var count = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
+                        for (var i = 1; i < count + 1; i++) {
+                            var process = {
+                                Shori: $('#shori_' + i).val(),
+                                Arg1: $('#argument1_' + i).val(),
+                                Arg2: $('#argument2_' + i).val(),
+                                Arg3: $('#argument3_' + i).val(),
+                                Arg4: $('#argument4_' + i).val(),
+                                Arg5: $('#argument5_' + i).val(),
+                            };
+                            processes.push(process);
+                        }
+                        var parent = {
+                            ReadPath: document.getElementById('readPathDisplayNone').value,
+                            OutputPath: result.result.Path,
+                        };
+                        parent.Processes = processes;
+
+                        $.ajax({
+                            contentType: "application/json",
+                            data: JSON.stringify(parent),
+                            type: "POST",
+                            url: "@Url.Action("execute_Click", "Home")",
+                            success: function (result) {
+                                if (result.result.IsFile && !result.result.HasError) {
+                                    var target = document.getElementById('writeFileDownloadHidden');
+                                    target.href = '/Kelpex/Upload/' + result.result.Path;
+                                    target.click();
+                                }
+                                alert(result.result.Message);
+                                console.log('成功');
+                                $.ajax({
+                                    data: {
+                                        readPath: document.getElementById('readPathDisplayNone').value,
+                                        writePath: document.getElementById('writePathDisplayNone').value,
+                                    },
+                                    type: "POST",
+                                    url: "@Url.Action("DeleteAfterExecute", "Home")",
+                                    success: function (result) {
+                                        console.log('成功');
+                                    },
+                                    error: function () {
+                                        console.log('失敗');
+                                    }
+                                })
+                            },
+                            error: function () {
+                                console.log('失敗');
+                            }
+                        })
+                    },
+                    error: function () {
+                        console.log('失敗');
+                    }
+                });
             });
             $('#uploadConfigurationForm').submit(function(e) {
                 e.preventDefault();
                 $.ajax({
-                    url: '@Url.Action("Upload", "Home")',
+                    url: '@Url.Action("UploadForReadConfiguration", "Home")',
                     type: this.method,
                     data: new FormData(this),
                     cache: false,
@@ -192,6 +254,22 @@
                 var value = this.value;
                 document.getElementById("configurationPath").value = value;
             });
+            $('#uploadReadFileBtn').click(function () {
+                $('#uploadReadFile').click();
+                return false;
+            });
+            $("#uploadReadFile").change(function () {
+                var value = this.value;
+                document.getElementById("readPath").value = value;
+            });
+            $('#uploadWriteFileBtn').click(function () {
+                $('#uploadWriteFile').click();
+                return false;
+            });
+            $("#uploadWriteFile").change(function () {
+                var value = this.value;
+                document.getElementById("writePath").value = value;
+            });
         });
         //$(window).on('beforeunload', function (e) {
         //    return '';
@@ -201,7 +279,7 @@
 <body>
     <header class="container">
         <div id="title">
-            <h1>Excelを変換するサイト</h1>
+            <h1>Excelに書き込むプログラムを作成するサイト</h1>
         </div>
     </header>
     <div class="container">
@@ -232,8 +310,14 @@
                         <input type="text" class="form-control" id="readPath" readonly>
                     </div>
                     <input type="file" name="uploadReadFile" id="uploadReadFile" accept=".xlsx" style="display:none" />
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <button id="uploadReadFileBtn" class="btn-square-shadow">ファイル選択</button>
+                    </div>
+                    <div class="col-sm-1">
+                        <button id="executeReadFile" class="btn-square-shadow" style="display:none">読み込みExcelアップロード</button>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="hidden" class="form-control" id="readPathDisplayNone" />
                     </div>
                 </form>
             </div>
@@ -248,8 +332,14 @@
                         <input type="text" class="form-control" id="writePath" readonly>
                     </div>
                     <input type="file" name="uploadWriteFile" id="uploadWriteFile" accept=".xlsx" style="display:none" />
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <button id="uploadWriteFileBtn" class="btn-square-shadow">ファイル選択</button>
+                    </div>
+                    <div class="col-sm-1">
+                        <button id="executeWriteFile" class="btn-square-shadow" style="display:none">書き込みExcelアップロード</button>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="hidden" class="form-control" id="writePathDisplayNone" />
                     </div>
                 </form>
             </div>
@@ -270,6 +360,7 @@
                         <a id="configurationDownloadHidden" href="~/Executor/設定Excel.xlsx" style="visibility:hidden" download>設定Excelひな形ダウンロード</a>
                         <a id="exeDownloadHidden" href="~/Executor/Kelpex.zip" style="visibility:hidden" download>実行exeダウンロード</a>
                         <a id="saveFileDownloadHidden" href="" style="visibility:hidden" download>保存ファイルダウンロード</a><br />
+                        <a id="writeFileDownloadHidden" href="" style="visibility:hidden" download>書き込みファイルダウンロード</a><br />
                         <button id="configurationDownload" class="btn-square-shadow" type="button">設定Excelひな形ダウンロード</button>
                         <button id="add" class="btn-square-shadow" type="button">処理内容追加</button>
                         <button id="save" class="btn-square-shadow" type="button">処理内容保存</button>
@@ -280,19 +371,5 @@
             </div>
         </div>
     </div>
-    @*<footer>
-        <div class="container">
-            <div align="right" class="form-inline row">
-                <a id="configurationDownloadHidden" href="~/Executor/設定Excel.xlsx" style="visibility:hidden" download>設定Excelひな形ダウンロード</a>
-                <a id="exeDownloadHidden" href="~/Executor/Kelpex.zip" style="visibility:hidden" download>実行exeダウンロード</a>
-                <a id="saveFileDownloadHidden" href="" style="visibility:hidden" download>保存ファイルダウンロード</a><br />
-                <button id="configurationDownload" class="btn-square-shadow">設定Excelひな形ダウンロード</button>
-                <button id="add" class="btn-square-shadow">処理内容追加</button>
-                <button id="save" class="btn-square-shadow">処理内容保存</button>
-                <button id="execute" class="btn-square-shadow">処理実行</button>
-                <button id="exeDownload" class="btn-square-shadow">実行exeダウンロード</button>
-            </div>
-        </div>
-    </footer>*@
 </body>
 </html>

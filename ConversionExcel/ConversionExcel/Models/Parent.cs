@@ -9,7 +9,7 @@ namespace ConversionExcel.Models
     {
         public string ConfigurationPath { get; set; }
         public string ReadPath { get; set; }
-        public string OutputPath { get; set; }
+        public string WritePath { get; set; }
         public List<Process> Processes { get; set; }
     }
 }

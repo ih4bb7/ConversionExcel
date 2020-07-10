@@ -32,7 +32,7 @@ namespace ConversionExcel.Models
             try
             {
                 parent.ReadPath = configurationExcel.Reading("実行設定", "B1");
-                parent.OutputPath = configurationExcel.Reading("実行設定", "B2");
+                parent.WritePath = configurationExcel.Reading("実行設定", "B2");
                 var rowCount = 5;
                 while (!string.IsNullOrEmpty(process.Shori = configurationExcel.Reading("実行設定", "A" + rowCount)))
                 {
@@ -60,9 +60,9 @@ namespace ConversionExcel.Models
         public Results Execute(Parent parent)
         {
             var readPath = parent.ReadPath;
-            var outputPath = parent.OutputPath;
+            var outputPath = parent.WritePath;
 
-            if (!File.Exists(readPath)) return new Results() { Message = ConstValue.NOT_EXISTS_FILE };
+            if (!File.Exists(readPath)) return new Results() { Message = ConstValue.NOT_EXISTS_READFILE };
 
             var readFileInfo = new FileInfo(readPath);
             var outputFileInfo = new FileInfo(outputPath);
