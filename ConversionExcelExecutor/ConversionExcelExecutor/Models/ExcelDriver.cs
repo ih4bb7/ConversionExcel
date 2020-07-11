@@ -32,7 +32,7 @@ namespace ConversionExcelExecutor.Models
             try
             {
                 parent.ReadPath = configurationExcel.Reading("実行設定", "B1");
-                parent.OutputPath = configurationExcel.Reading("実行設定", "B2");
+                parent.WritePath = configurationExcel.Reading("実行設定", "B2");
                 var rowCount = 5;
                 while (!string.IsNullOrEmpty(process.Shori = configurationExcel.Reading("実行設定", "A" + rowCount)))
                 {
@@ -60,29 +60,29 @@ namespace ConversionExcelExecutor.Models
         public Results Execute(Parent parent)
         {
             var readPath = parent.ReadPath;
-            var outputPath = parent.OutputPath;
+            var outputPath = parent.WritePath;
 
-            if (!File.Exists(readPath)) return new Results() { Message = ConstValue.NOT_EXISTS_FILE };
+            if (!File.Exists(readPath)) return new Results() { Message = ConstValue.NOT_EXISTS_READFILE };
 
             var readFileInfo = new FileInfo(readPath);
             var outputFileInfo = new FileInfo(outputPath);
             var readExcel = new ExcelDriverCore(readFileInfo);
-            var outputExcel = new ExcelDriverCore(outputFileInfo);
+            var writeExcel = new ExcelDriverCore(outputFileInfo);
 
             try
             {
-                outputExcel.NewCreate(outputPath);
+                writeExcel.NewCreate(outputPath);
             }
             catch (Exception e)
             {
                 return new Results() { Message = e.InnerException.ToString() };
             }
 
-            var results = ExecuteCore(readExcel, outputExcel, parent);
+            var results = ExecuteCore(readExcel, writeExcel, parent);
 
             return results;
         }
-        private Results ExecuteCore(ExcelDriverCore readExcel, ExcelDriverCore outputExcel, Parent parent)
+        private Results ExecuteCore(ExcelDriverCore readExcel, ExcelDriverCore writeExcel, Parent parent)
         {
             var count = 0;
             try
@@ -98,7 +98,19 @@ namespace ConversionExcelExecutor.Models
                     }
                     if (process.Shori == ConstValue.WRITING)
                     {
-                        outputExcel.Writing(process.Arg1, process.Arg2, process.Arg3);
+                        writeExcel.Writing(process.Arg1, process.Arg2, process.Arg3);
+                        continue;
+                    }
+                    if (process.Shori == ConstValue.CELLCOPY_AND_PASTE)
+                    {
+                        var value = readExcel.Reading(process.Arg1, process.Arg2);
+                        writeExcel.Writing(process.Arg3, process.Arg4, value);
+                        continue;
+                    }
+                    if (process.Shori == ConstValue.ROWCOPY_AND_PASTE)
+                    {
+                        var value = readExcel.RowCopy(process.Arg1, int.Parse(process.Arg2));
+                        writeExcel.RowPaste(process.Arg3, int.Parse(process.Arg4), value);
                         continue;
                     }
                     // 処理をどんどん増やしていく
@@ -111,7 +123,7 @@ namespace ConversionExcelExecutor.Models
             finally
             {
                 readExcel.Dispose();
-                outputExcel.Dispose();
+                writeExcel.Dispose();
             }
 
             return new Results() { Message = ConstValue.SUCCESS };
@@ -120,9 +132,6 @@ namespace ConversionExcelExecutor.Models
         {
             try
             {
-                configurationExcel.Writing("実行設定", "B1", parent.ReadPath);
-                configurationExcel.Writing("実行設定", "B2", parent.OutputPath);
-
                 for (int i = 0; i < parent.Processes.Count; i++)
                 {
                     configurationExcel.Writing("実行設定", "A" + (i + 5), parent.Processes[i].Shori == null ? "" : parent.Processes[i].Shori);

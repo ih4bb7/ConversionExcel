@@ -53,75 +53,40 @@ namespace ConversionExcel.Models
         {
             ExcelPackage.Dispose();
         }
-
-
-
-
-
-
-
-
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        public static void BackUpExcel(string fileFullPath)
+        /// <summary>
+        /// 行コピー
+        /// </summary>
+        public ForRowCopyAndPaste RowCopy(string sheetName, int rowNum)
         {
-            if (File.Exists(fileFullPath))
+            var result = new ForRowCopyAndPaste();
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
+
+            for (int i = 0; i < sheet.Dimension.Columns; i++)
             {
-                File.Move(fileFullPath, Path.Combine(Path.GetDirectoryName(fileFullPath), DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Path.GetFileName(fileFullPath)));
+                result.rowValueData.Add(sheet.Cells[rowNum, i + 1].Value);
+                result.rowStyleData.Add(sheet.Cells[rowNum, i + 1].StyleID);
             }
+
+            return result;
         }
+        /// <summary>
+        /// 行ペースト
+        /// </summary>
+        public void RowPaste(string sheetName, int rowNum, ForRowCopyAndPaste value)
+        {
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
 
-        //public static void CreateNewExcel(ExcelPackage package, string sheetName, DataTable dataTable)
-        //{
-        //    CreateNewExcel(package, sheetName, dataTable, null);
-        //}
+            for (int i = 0; i < value.rowValueData.Count; i++)
+            {
+                sheet.Cells[rowNum, i + 1].Value = value.rowValueData[i];
+                sheet.Cells[rowNum, i + 1].StyleID = value.rowStyleData[i];
+            }
 
-        //public static void CreateNewExcel(ExcelPackage package, string sheetName, DataTable dataTable, List<string> headerList)
-        //{
-        //    var sheet = package.Workbook.Worksheets.Add(sheetName);
-        //    var tableList = dataTable.AsEnumerable().ToList();
-        //    var rowIndex = 1;
-
-        //    if (headerList != null)
-        //    {
-        //        SetRowValueString(sheet, rowIndex, headerList);
-        //        rowIndex++;
-
-        //        package.Save();
-        //    }
-
-        //    var dataCount = 0;
-
-        //    foreach (var item in tableList)
-        //    {
-        //        dataCount++;
-        //        SetRowValueString(sheet, rowIndex, item.ItemArray.ToList().ConvertAll(x => x.ToString()));
-        //        rowIndex++;
-
-        //        if (dataCount == 100)
-        //        {
-        //            package.Save();
-        //            //break;
-        //            dataCount = 0;
-        //        }
-        //    }
-
-        //    package.Save();
-        //}
-
+            ExcelPackage.Save();
+        }
+        /// <summary>
+        /// 行コピペ
+        /// </summary>
         public static void RowCopyAndPaste(ExcelPackage sourcePackage, string sourceSheetName, ExcelPackage destPackage, string destSheetName, int sourceRowNum, int destRowNum)
         {
             var rowValueData = new List<object>();
@@ -145,6 +110,41 @@ namespace ConversionExcel.Models
 
             destPackage.Save();
         }
+        public class ForRowCopyAndPaste
+        {
+            public List<object> rowValueData;
+            public List<int> rowStyleData;
+
+            public ForRowCopyAndPaste()
+            {
+                rowValueData = new List<object>();
+                rowStyleData = new List<int>();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
 
         public static void RangeCopyAndPaste(ExcelPackage sourcePackage, string sourceSheetName, ExcelPackage destPackage, string destSheetName, int fromRow_Source, int fromCol_Source, int toRow_Source, int toCol_Source, int destRowNum, int destColumnNum)
         {

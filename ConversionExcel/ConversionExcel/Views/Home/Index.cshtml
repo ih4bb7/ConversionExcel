@@ -51,7 +51,7 @@
                 var parent = {
                     ConfigurationPath: "",
                     ReadPath: "",
-                    OutputPath: "",
+                    WritePath: "",
                 };
                 parent.Processes = processes;
 
@@ -101,7 +101,7 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        if (!result.result.IsFile) {
+                        if (!result.result.IsFile || result.result.HasError) {
                             alert(result.result.Message);
                             return;
                         }
@@ -141,7 +141,7 @@
                         }
                         var parent = {
                             ReadPath: document.getElementById('readPathDisplayNone').value,
-                            OutputPath: result.result.Path,
+                            WritePath: document.getElementById('writePathDisplayNone').value,
                         };
                         parent.Processes = processes;
 
@@ -226,6 +226,28 @@
                                                 , result.result.Parent.Processes[i - 1].Arg1
                                                 , result.result.Parent.Processes[i - 1].Arg2
                                                 , result.result.Parent.Processes[i - 1].Arg3
+                                            )
+                                            break;
+                                        case "セルコピペ":
+                                            readOnly1(id1, id2, id3, id4, id5);
+                                            placeholder4(id1, id2, id3, id4, "読み込みシート名", "セル番地", "書き込みシート名", "セル番地");
+                                            value4(
+                                                i
+                                                , result.result.Parent.Processes[i - 1].Arg1
+                                                , result.result.Parent.Processes[i - 1].Arg2
+                                                , result.result.Parent.Processes[i - 1].Arg3
+                                                , result.result.Parent.Processes[i - 1].Arg4
+                                            )
+                                            break;
+                                        case "行コピペ":
+                                            readOnly1(id1, id2, id3, id4, id5);
+                                            placeholder4(id1, id2, id3, id4, "読み込みシート名", "行番号", "書き込みシート名", "行番号");
+                                            value4(
+                                                i
+                                                , result.result.Parent.Processes[i - 1].Arg1
+                                                , result.result.Parent.Processes[i - 1].Arg2
+                                                , result.result.Parent.Processes[i - 1].Arg3
+                                                , result.result.Parent.Processes[i - 1].Arg4
                                             )
                                             break;
                                         default:

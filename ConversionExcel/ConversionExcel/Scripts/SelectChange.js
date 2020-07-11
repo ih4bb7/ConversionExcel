@@ -15,6 +15,14 @@
             readOnly2(id1, id2, id3, id4, id5);
             placeholder3(id1, id2, id3, "シート名", "セル番地", "値");
             break;
+        case "セルコピペ":
+            readOnly1(id1, id2, id3, id4, id5);
+            placeholder4(id1, id2, id3, id4, "読み込みシート名", "セル番地", "書き込みシート名", "セル番地");
+            break;
+        case "行コピペ":
+            readOnly1(id1, id2, id3, id4, id5);
+            placeholder4(id1, id2, id3, id4, "読み込みシート名", "行番号", "書き込みシート名", "行番号");
+            break;
         default:
             break;
     }
@@ -59,6 +67,11 @@ function placeholder5(id1, id2, id3, id4, id5, placeholder1, placeholder2, place
 }
 
 function readOnly0(id1, id2, id3, id4, id5) {
+    document.getElementById(id1).value = "";
+    document.getElementById(id2).value = "";
+    document.getElementById(id3).value = "";
+    document.getElementById(id4).value = "";
+    document.getElementById(id5).value = "";
     document.getElementById(id1).readOnly = false;
     document.getElementById(id2).readOnly = false;
     document.getElementById(id3).readOnly = false;
@@ -68,39 +81,59 @@ function readOnly0(id1, id2, id3, id4, id5) {
 }
 
 function readOnly1(id1, id2, id3, id4, id5) {
+    document.getElementById(id1).value = "";
+    document.getElementById(id2).value = "";
+    document.getElementById(id3).value = "";
+    document.getElementById(id4).value = "";
+    document.getElementById(id5).value = "";
     document.getElementById(id1).readOnly = false;
     document.getElementById(id2).readOnly = false;
     document.getElementById(id3).readOnly = false;
     document.getElementById(id4).readOnly = false;
     document.getElementById(id5).readOnly = true;
-    placeholder4(id1, id2, id3, id4, "", "", "", "");
+    placeholder5(id1, id2, id3, id4, id5, "", "", "", "", "");
 }
 
 function readOnly2(id1, id2, id3, id4, id5) {
+    document.getElementById(id1).value = "";
+    document.getElementById(id2).value = "";
+    document.getElementById(id3).value = "";
+    document.getElementById(id4).value = "";
+    document.getElementById(id5).value = "";
     document.getElementById(id1).readOnly = false;
     document.getElementById(id2).readOnly = false;
     document.getElementById(id3).readOnly = false;
     document.getElementById(id4).readOnly = true;
     document.getElementById(id5).readOnly = true;
-    placeholder3(id1, id2, id3, "", "", "");
+    placeholder5(id1, id2, id3, id4, id5, "", "", "", "", "");
 }
 
 function readOnly3(id1, id2, id3, id4, id5) {
+    document.getElementById(id1).value = "";
+    document.getElementById(id2).value = "";
+    document.getElementById(id3).value = "";
+    document.getElementById(id4).value = "";
+    document.getElementById(id5).value = "";
     document.getElementById(id1).readOnly = false;
     document.getElementById(id2).readOnly = false;
     document.getElementById(id3).readOnly = true;
     document.getElementById(id4).readOnly = true;
     document.getElementById(id5).readOnly = true;
-    placeholder2(id1, id2, "", "");
+    placeholder5(id1, id2, id3, id4, id5, "", "", "", "", "");
 }
 
 function readOnly4(id1, id2, id3, id4, id5) {
+    document.getElementById(id1).value = "";
+    document.getElementById(id2).value = "";
+    document.getElementById(id3).value = "";
+    document.getElementById(id4).value = "";
+    document.getElementById(id5).value = "";
     document.getElementById(id1).readOnly = false;
     document.getElementById(id2).readOnly = true;
     document.getElementById(id3).readOnly = true;
     document.getElementById(id4).readOnly = true;
     document.getElementById(id5).readOnly = true;
-    placeholder1(id1, "");
+    placeholder5(id1, id2, id3, id4, id5, "", "", "", "", "");
 }
 
 function readOnly5(id1, id2, id3, id4, id5) {
@@ -114,5 +147,5 @@ function readOnly5(id1, id2, id3, id4, id5) {
     document.getElementById(id3).readOnly = true;
     document.getElementById(id4).readOnly = true;
     document.getElementById(id5).readOnly = true;
-    placeholder0(id1, id2, id3, id4, id5);
+    placeholder5(id1, id2, id3, id4, id5, "", "", "", "", "");
 }

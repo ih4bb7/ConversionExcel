@@ -45,7 +45,14 @@ namespace ConversionExcel.Controllers
         }
         public JsonResult UploadReadFileForExecute()
         {
-            return Upload(Request.Files[0], ConstValue.NOT_EXISTS_READFILE);
+            try
+            {
+                return Upload(Request.Files[0], ConstValue.NOT_EXISTS_READFILE);
+            }
+            catch (Exception e)
+            {
+                return Json(new { result = new Results() { Message = ConstValue.CHANGE_READFILE, HasError = true } });
+            }
         }
         public JsonResult UploadWriteFileForExecute()
         {
@@ -135,6 +142,8 @@ namespace ConversionExcel.Controllers
             partialView.Append("                    <select id='shori_Count' class='form-control' onchange='selectChange()'>" + Environment.NewLine);
             partialView.Append("                        <option></option>" + Environment.NewLine);
             partialView.Append("                        <option>書き込み</option>" + Environment.NewLine);
+            partialView.Append("                        <option>セルコピペ</option>" + Environment.NewLine);
+            partialView.Append("                        <option>行コピペ</option>" + Environment.NewLine);
             partialView.Append("                    </select>" + Environment.NewLine);
             partialView.Append("                    <p class='form-inline'>" + Environment.NewLine);
             partialView.Append("                        <input type='text' class='form-control' id='argument1_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);

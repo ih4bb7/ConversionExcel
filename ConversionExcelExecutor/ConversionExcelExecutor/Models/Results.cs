@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace ConversionExcelExecutor.Models
 {
@@ -11,5 +12,6 @@ namespace ConversionExcelExecutor.Models
         public string PartialView;
         public bool IsFile = true;
         public bool HasError;
+        public string Path;
     }
 }
