@@ -45,14 +45,24 @@ namespace ConversionExcel.Controllers
         }
         public JsonResult UploadReadFileForExecute()
         {
-            try
+            var file = Request.Files[0];
+            var fileName = string.Empty;
+            var filePath = string.Empty;
+            var dir = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            Directory.CreateDirectory(dir);
+            if (file.ContentLength == 0)
             {
-                return Upload(Request.Files[0], ConstValue.NOT_EXISTS_READFILE);
+                fileName = "読み込みExcel.xlsx";
+                filePath = Path.Combine(dir, fileName);
             }
-            catch (Exception e)
+            else
             {
-                return Json(new { result = new Results() { Message = ConstValue.CHANGE_READFILE, HasError = true } });
+                fileName = Path.GetFileName(file.FileName);
+                filePath = Path.Combine(dir, fileName);
+                file.SaveAs(filePath);
             }
+
+            return Json(new { result = new Results() { Path = filePath } });
         }
         public JsonResult UploadWriteFileForExecute()
         {
@@ -77,11 +87,8 @@ namespace ConversionExcel.Controllers
         }
         public JsonResult UploadForReadConfiguration()
         {
-            return Upload(Request.Files[0], "");
-        }
-        private JsonResult Upload(HttpPostedFileBase file, string constValue)
-        {
-            if (file.ContentLength == 0) return Json(new { result = new Results() { IsFile = false, Message = constValue } });
+            var file = Request.Files[0];
+            if (file.ContentLength == 0) return Json(new { result = new Results() { IsFile = false } });
 
             var dir = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", DateTime.Now.ToString("yyyyMMddHHmmss"));
             Directory.CreateDirectory(dir);
@@ -144,6 +151,8 @@ namespace ConversionExcel.Controllers
             partialView.Append("                        <option>書き込み</option>" + Environment.NewLine);
             partialView.Append("                        <option>セルコピペ</option>" + Environment.NewLine);
             partialView.Append("                        <option>行コピペ</option>" + Environment.NewLine);
+            partialView.Append("                        <option>数字書き込み</option>" + Environment.NewLine);
+            partialView.Append("                        <option>関数書き込み</option>" + Environment.NewLine);
             partialView.Append("                    </select>" + Environment.NewLine);
             partialView.Append("                    <p class='form-inline'>" + Environment.NewLine);
             partialView.Append("                        <input type='text' class='form-control' id='argument1_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);

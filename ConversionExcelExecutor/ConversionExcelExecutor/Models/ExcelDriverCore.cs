@@ -84,32 +84,6 @@ namespace ConversionExcelExecutor.Models
 
             ExcelPackage.Save();
         }
-        /// <summary>
-        /// 行コピペ
-        /// </summary>
-        public static void RowCopyAndPaste(ExcelPackage sourcePackage, string sourceSheetName, ExcelPackage destPackage, string destSheetName, int sourceRowNum, int destRowNum)
-        {
-            var rowValueData = new List<object>();
-            var rowStyleData = new List<int>();
-
-            var sourceWorksheet = sourcePackage.Workbook.Worksheets[sourceSheetName];
-
-            for (int i = 0; i < sourceWorksheet.Dimension.Columns; i++)
-            {
-                rowValueData.Add(sourceWorksheet.Cells[sourceRowNum, i + 1].Value);
-                rowStyleData.Add(sourceWorksheet.Cells[sourceRowNum, i + 1].StyleID);
-            }
-
-            var destWorksheet = destPackage.Workbook.Worksheets[destSheetName];
-
-            for (int i = 0; i < rowValueData.Count; i++)
-            {
-                destWorksheet.Cells[destRowNum, i + 1].Value = rowValueData[i];
-                destWorksheet.Cells[destRowNum, i + 1].StyleID = rowStyleData[i];
-            }
-
-            destPackage.Save();
-        }
         public class ForRowCopyAndPaste
         {
             public List<object> rowValueData;
@@ -121,7 +95,27 @@ namespace ConversionExcelExecutor.Models
                 rowStyleData = new List<int>();
             }
         }
-
+        /// <summary>
+        /// 数字書き込み
+        /// </summary>
+        public void NumberWriting(string sheetName, string cell, int value)
+        {
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
+            sheet.Cells[cell].Style.Numberformat.Format = "0";
+            sheet.Cells[cell].Value = value;
+            ExcelPackage.Save();
+            return;
+        }
+        /// <summary>
+        /// 関数書き込み
+        /// </summary>
+        public void FormulaWriting(string sheetName, string cell, string value)
+        {
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
+            sheet.Cells[cell].Formula = value;
+            ExcelPackage.Save();
+            return;
+        }
 
 
 

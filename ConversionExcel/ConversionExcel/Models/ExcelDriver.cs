@@ -62,8 +62,6 @@ namespace ConversionExcel.Models
             var readPath = parent.ReadPath;
             var outputPath = parent.WritePath;
 
-            if (!File.Exists(readPath)) return new Results() { Message = ConstValue.NOT_EXISTS_READFILE };
-
             var readFileInfo = new FileInfo(readPath);
             var outputFileInfo = new FileInfo(outputPath);
             var readExcel = new ExcelDriverCore(readFileInfo);
@@ -71,6 +69,7 @@ namespace ConversionExcel.Models
 
             try
             {
+                readExcel.NewCreate(readPath);
                 writeExcel.NewCreate(outputPath);
             }
             catch (Exception e)
@@ -111,6 +110,16 @@ namespace ConversionExcel.Models
                     {
                         var value = readExcel.RowCopy(process.Arg1, int.Parse(process.Arg2));
                         writeExcel.RowPaste(process.Arg3, int.Parse(process.Arg4), value);
+                        continue;
+                    }
+                    if (process.Shori == ConstValue.NUMBERWRITING)
+                    {
+                        writeExcel.NumberWriting(process.Arg1, process.Arg2, int.Parse(process.Arg3));
+                        continue;
+                    }
+                    if (process.Shori == ConstValue.FORMULAWRITING)
+                    {
+                        writeExcel.FormulaWriting(process.Arg1, process.Arg2, process.Arg3);
                         continue;
                     }
                     // 処理をどんどん増やしていく

@@ -23,6 +23,14 @@
             readOnly1(id1, id2, id3, id4, id5);
             placeholder4(id1, id2, id3, id4, "読み込みシート名", "行番号", "書き込みシート名", "行番号");
             break;
+        case "数字書き込み":
+            readOnly2(id1, id2, id3, id4, id5);
+            placeholder3(id1, id2, id3, "シート名", "セル番地", "数字");
+            break;
+        case "関数書き込み":
+            readOnly2(id1, id2, id3, id4, id5);
+            placeholder3(id1, id2, id3, "シート名", "セル番地", "関数");
+            break;
         default:
             break;
     }

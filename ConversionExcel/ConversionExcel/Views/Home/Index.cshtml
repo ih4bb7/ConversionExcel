@@ -101,10 +101,10 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        if (!result.result.IsFile || result.result.HasError) {
-                            alert(result.result.Message);
-                            return;
-                        }
+                        //if (!result.result.IsFile || result.result.HasError) {
+                        //    alert(result.result.Message);
+                        //    return;
+                        //}
                         document.getElementById('readPathDisplayNone').value = result.result.Path;
                         console.log('成功');
                         $('#executeWriteFile').click();
@@ -250,6 +250,26 @@
                                                 , result.result.Parent.Processes[i - 1].Arg4
                                             )
                                             break;
+                                        case "数字書き込み":
+                                            readOnly2(id1, id2, id3, id4, id5);
+                                            placeholder3(id1, id2, id3, "シート名", "セル番地", "数字");
+                                            value3(
+                                                i
+                                                , result.result.Parent.Processes[i - 1].Arg1
+                                                , result.result.Parent.Processes[i - 1].Arg2
+                                                , result.result.Parent.Processes[i - 1].Arg3
+                                            )
+                                            break;
+                                        case "関数書き込み":
+                                            readOnly2(id1, id2, id3, id4, id5);
+                                            placeholder3(id1, id2, id3, "シート名", "セル番地", "関数");
+                                            value3(
+                                                i
+                                                , result.result.Parent.Processes[i - 1].Arg1
+                                                , result.result.Parent.Processes[i - 1].Arg2
+                                                , result.result.Parent.Processes[i - 1].Arg3
+                                            )
+                                            break;
                                         default:
                                             break;
                                     }
@@ -303,6 +323,11 @@
         <div id="title">
             <h1>Excelに書き込むプログラムを作成するサイト</h1>
         </div>
+        <br />
+        <div>
+            <p>項目説明が設定Excelひな形に記載してあるので、まずは設定Excelのひな形をダウンロードしてください</p>
+        </div>
+        <br />
     </header>
     <div class="container">
         <div class="form-group row">
