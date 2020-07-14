@@ -110,7 +110,10 @@ namespace ConversionExcel.Controllers
             var writeFilePath = Path.Combine(@"C:\作業\Kelpex\Kelpex\Upload", writePath);
             System.IO.File.Delete(readFilePath);
             System.IO.File.Delete(writeFilePath);
+            var readDirPath = Path.GetDirectoryName(readFilePath);
+            var writeDirPath = Path.GetDirectoryName(writeFilePath);
             Directory.Delete(Path.GetDirectoryName(readFilePath));
+            if (readDirPath != writeDirPath) Directory.Delete(Path.GetDirectoryName(writeFilePath));
             return Json(new { result = new Results() });
         }
         public JsonResult readConfiguration_Click(string path)
@@ -149,10 +152,9 @@ namespace ConversionExcel.Controllers
             partialView.Append("                    <select id='shori_Count' class='form-control' onchange='selectChange()'>" + Environment.NewLine);
             partialView.Append("                        <option></option>" + Environment.NewLine);
             partialView.Append("                        <option>書き込み</option>" + Environment.NewLine);
-            partialView.Append("                        <option>セルコピペ</option>" + Environment.NewLine);
-            partialView.Append("                        <option>行コピペ</option>" + Environment.NewLine);
             partialView.Append("                        <option>数字書き込み</option>" + Environment.NewLine);
             partialView.Append("                        <option>関数書き込み</option>" + Environment.NewLine);
+            partialView.Append("                        <option>範囲コピペ</option>" + Environment.NewLine);
             partialView.Append("                    </select>" + Environment.NewLine);
             partialView.Append("                    <p class='form-inline'>" + Environment.NewLine);
             partialView.Append("                        <input type='text' class='form-control' id='argument1_Count' style='width:19.6%' readonly='readonly'>" + Environment.NewLine);

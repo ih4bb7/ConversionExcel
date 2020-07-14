@@ -15,14 +15,6 @@
             readOnly2(id1, id2, id3, id4, id5);
             placeholder3(id1, id2, id3, "シート名", "セル番地", "値");
             break;
-        case "セルコピペ":
-            readOnly1(id1, id2, id3, id4, id5);
-            placeholder4(id1, id2, id3, id4, "読み込みシート名", "セル番地", "書き込みシート名", "セル番地");
-            break;
-        case "行コピペ":
-            readOnly1(id1, id2, id3, id4, id5);
-            placeholder4(id1, id2, id3, id4, "読み込みシート名", "行番号", "書き込みシート名", "行番号");
-            break;
         case "数字書き込み":
             readOnly2(id1, id2, id3, id4, id5);
             placeholder3(id1, id2, id3, "シート名", "セル番地", "数字");
@@ -30,6 +22,10 @@
         case "関数書き込み":
             readOnly2(id1, id2, id3, id4, id5);
             placeholder3(id1, id2, id3, "シート名", "セル番地", "関数");
+            break;
+        case "範囲コピペ":
+            readOnly1(id1, id2, id3, id4, id5);
+            placeholder4(id1, id2, id3, id4, "読み込みシート名", "範囲", "書き込みシート名", "セル番地");
             break;
         default:
             break;

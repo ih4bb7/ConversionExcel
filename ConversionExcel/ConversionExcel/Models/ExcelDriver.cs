@@ -100,18 +100,6 @@ namespace ConversionExcel.Models
                         writeExcel.Writing(process.Arg1, process.Arg2, process.Arg3);
                         continue;
                     }
-                    if (process.Shori == ConstValue.CELLCOPY_AND_PASTE)
-                    {
-                        var value = readExcel.Reading(process.Arg1, process.Arg2);
-                        writeExcel.Writing(process.Arg3, process.Arg4, value);
-                        continue;
-                    }
-                    if (process.Shori == ConstValue.ROWCOPY_AND_PASTE)
-                    {
-                        var value = readExcel.RowCopy(process.Arg1, int.Parse(process.Arg2));
-                        writeExcel.RowPaste(process.Arg3, int.Parse(process.Arg4), value);
-                        continue;
-                    }
                     if (process.Shori == ConstValue.NUMBERWRITING)
                     {
                         writeExcel.NumberWriting(process.Arg1, process.Arg2, int.Parse(process.Arg3));
@@ -122,12 +110,18 @@ namespace ConversionExcel.Models
                         writeExcel.FormulaWriting(process.Arg1, process.Arg2, process.Arg3);
                         continue;
                     }
+                    if (process.Shori == ConstValue.RANGECOPY_AND_PASTE)
+                    {
+                        var value = readExcel.RangeCopy(process.Arg1, process.Arg2);
+                        writeExcel.RangePaste(process.Arg3, process.Arg4, value);
+                        continue;
+                    }
                     // 処理をどんどん増やしていく
                 }
             }
             catch (Exception e)
             {
-                return new Results() { Message = ConstValue.PROCESSING_CONTENT + count + "：" + e.Message };
+                return new Results() { HasError = true, Message = ConstValue.PROCESSING_CONTENT + count + "：" + e.Message };
             }
             finally
             {

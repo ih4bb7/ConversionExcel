@@ -16,6 +16,7 @@
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {
+                document.getElementById('loading').style.visibility = "visible";
                 var count = (document.getElementById('Processes').innerHTML.match(/処理内容/g) || []).length;
                 // Ajax通信を開始する
                 $.ajax({
@@ -25,9 +26,11 @@
                     success: function (partialView) {
                         $('#Processes').append(partialView);
                         console.log('成功');
+                        document.getElementById('loading').style.visibility = "hidden";
                     },
                     error: function () {
                         console.log('失敗');
+                        document.getElementById('loading').style.visibility = "hidden";
                     }
                 })
             });
@@ -89,7 +92,6 @@
             });
             $('#execute').click(function () {
                 $('#executeReadFile').click();
-
             });
             $('#uploadReadFileForm').submit(function(e) {
                 e.preventDefault();
@@ -101,10 +103,6 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        //if (!result.result.IsFile || result.result.HasError) {
-                        //    alert(result.result.Message);
-                        //    return;
-                        //}
                         document.getElementById('readPathDisplayNone').value = result.result.Path;
                         console.log('成功');
                         $('#executeWriteFile').click();
@@ -183,7 +181,8 @@
                     }
                 });
             });
-            $('#uploadConfigurationForm').submit(function(e) {
+            $('#uploadConfigurationForm').submit(function (e) {
+                document.getElementById('loading').style.visibility = "visible";
                 e.preventDefault();
                 $.ajax({
                     url: '@Url.Action("UploadForReadConfiguration", "Home")',
@@ -228,28 +227,6 @@
                                                 , result.result.Parent.Processes[i - 1].Arg3
                                             )
                                             break;
-                                        case "セルコピペ":
-                                            readOnly1(id1, id2, id3, id4, id5);
-                                            placeholder4(id1, id2, id3, id4, "読み込みシート名", "セル番地", "書き込みシート名", "セル番地");
-                                            value4(
-                                                i
-                                                , result.result.Parent.Processes[i - 1].Arg1
-                                                , result.result.Parent.Processes[i - 1].Arg2
-                                                , result.result.Parent.Processes[i - 1].Arg3
-                                                , result.result.Parent.Processes[i - 1].Arg4
-                                            )
-                                            break;
-                                        case "行コピペ":
-                                            readOnly1(id1, id2, id3, id4, id5);
-                                            placeholder4(id1, id2, id3, id4, "読み込みシート名", "行番号", "書き込みシート名", "行番号");
-                                            value4(
-                                                i
-                                                , result.result.Parent.Processes[i - 1].Arg1
-                                                , result.result.Parent.Processes[i - 1].Arg2
-                                                , result.result.Parent.Processes[i - 1].Arg3
-                                                , result.result.Parent.Processes[i - 1].Arg4
-                                            )
-                                            break;
                                         case "数字書き込み":
                                             readOnly2(id1, id2, id3, id4, id5);
                                             placeholder3(id1, id2, id3, "シート名", "セル番地", "数字");
@@ -270,6 +247,17 @@
                                                 , result.result.Parent.Processes[i - 1].Arg3
                                             )
                                             break;
+                                        case "範囲コピペ":
+                                            readOnly1(id1, id2, id3, id4, id5);
+                                            placeholder4(id1, id2, id3, id4, "読み込みシート名", "範囲", "書き込みシート名", "セル番地");
+                                            value4(
+                                                i
+                                                , result.result.Parent.Processes[i - 1].Arg1
+                                                , result.result.Parent.Processes[i - 1].Arg2
+                                                , result.result.Parent.Processes[i - 1].Arg3
+                                                , result.result.Parent.Processes[i - 1].Arg4
+                                            )
+                                            break;
                                         default:
                                             break;
                                     }
@@ -282,9 +270,11 @@
                             }
                         })
                         console.log('成功');
+                        document.getElementById('loading').style.visibility = "hidden";
                     },
                     error: function() {
                         console.log('失敗');
+                        document.getElementById('loading').style.visibility = "hidden";
                     }
                 });
             });
@@ -320,10 +310,10 @@
 </head>
 <body>
     <header class="container">
-        <div id="title">
-            <h1>Excelに書き込むプログラムを作成するサイト</h1>
+        <div id="title" class="form-group row">
+            <h1 class="col-sm-9">Excelに書き込むプログラムを作成するサイト</h1>
+            <img src="~/Pics/loading.gif" id="loading" class="col-sm-3" />
         </div>
-        <br />
         <div>
             <p>項目説明が設定Excelひな形に記載してあるので、まずは設定Excelのひな形をダウンロードしてください</p>
         </div>

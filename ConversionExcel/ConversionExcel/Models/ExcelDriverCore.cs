@@ -54,48 +54,6 @@ namespace ConversionExcel.Models
             ExcelPackage.Dispose();
         }
         /// <summary>
-        /// 行コピー
-        /// </summary>
-        public ForRowCopyAndPaste RowCopy(string sheetName, int rowNum)
-        {
-            var result = new ForRowCopyAndPaste();
-            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
-
-            for (int i = 0; i < sheet.Dimension.Columns; i++)
-            {
-                result.rowValueData.Add(sheet.Cells[rowNum, i + 1].Value);
-                result.rowStyleData.Add(sheet.Cells[rowNum, i + 1].StyleID);
-            }
-
-            return result;
-        }
-        /// <summary>
-        /// 行ペースト
-        /// </summary>
-        public void RowPaste(string sheetName, int rowNum, ForRowCopyAndPaste value)
-        {
-            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
-
-            for (int i = 0; i < value.rowValueData.Count; i++)
-            {
-                sheet.Cells[rowNum, i + 1].Value = value.rowValueData[i];
-                sheet.Cells[rowNum, i + 1].StyleID = value.rowStyleData[i];
-            }
-
-            ExcelPackage.Save();
-        }
-        public class ForRowCopyAndPaste
-        {
-            public List<object> rowValueData;
-            public List<int> rowStyleData;
-
-            public ForRowCopyAndPaste()
-            {
-                rowValueData = new List<object>();
-                rowStyleData = new List<int>();
-            }
-        }
-        /// <summary>
         /// 数字書き込み
         /// </summary>
         public void NumberWriting(string sheetName, string cell, int value)
@@ -113,6 +71,24 @@ namespace ConversionExcel.Models
         {
             var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
             sheet.Cells[cell].Formula = value;
+            ExcelPackage.Save();
+            return;
+        }
+        /// <summary>
+        /// 範囲コピー
+        /// </summary>
+        public ExcelRange RangeCopy(string sheetName, string address)
+        {
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
+            return sheet.Cells[address];
+        }
+        /// <summary>
+        /// 範囲ペースト
+        /// </summary>
+        public void RangePaste(string sheetName, string address, ExcelRange value)
+        {
+            var sheet = ExcelPackage.Workbook.Worksheets[sheetName];
+            value.Copy(sheet.Cells[address]);
             ExcelPackage.Save();
             return;
         }

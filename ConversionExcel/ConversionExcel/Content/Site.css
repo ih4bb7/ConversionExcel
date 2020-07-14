@@ -19,6 +19,12 @@
     white-space: normal;
 }
 
+#loading {
+    width: 75px;
+    padding: initial;
+    visibility:hidden;
+}
+
 .btn-square-shadow {
     display: inline-block;
     padding: 0.5em 1em;

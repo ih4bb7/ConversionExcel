@@ -18,6 +18,7 @@ namespace ConversionExcelExecutor.Models
         public static string ROWCOPY_AND_PASTE = "行コピペ";
         public static string NUMBERWRITING = "数字書き込み";
         public static string FORMULAWRITING = "関数書き込み";
+        public static string RANGECOPY_AND_PASTE = "範囲コピペ";
 
         #endregion
     }
